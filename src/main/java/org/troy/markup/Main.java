@@ -41,7 +41,9 @@ public class Main {
 
         MainPanel panel;
         try {
-            panel = new MainPanel(ImageIO.read(getClass().getResourceAsStream("/images/test3.png")));
+            BufferedImage image = ImageIO.read(getClass().getResourceAsStream("/images/test3.png"));
+            panel = new MainPanel();
+            panel.setImage(image);
             frame.add(panel);
             frame.pack();
             frame.setVisible(true);

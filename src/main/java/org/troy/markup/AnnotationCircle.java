@@ -13,6 +13,7 @@ import java.awt.geom.Ellipse2D;
  */
 public class AnnotationCircle extends Ellipse2D.Double {
     private String letter;
+    private boolean isFocused;
     
     public AnnotationCircle(double x, double y, String letter){
         super(x, y, 20, 20);
@@ -25,6 +26,21 @@ public class AnnotationCircle extends Ellipse2D.Double {
     public String getLetter() {
         return letter;
     }
+
+    /**
+     * @return the isFocused
+     */
+    public boolean isFocused() {
+        return isFocused;
+    }
+
+    /**
+     * @param isFocused the isFocused to set
+     */
+    public void setIsFocused(boolean isFocused) {
+        this.isFocused = isFocused;
+    }
+    
     
     
 }
