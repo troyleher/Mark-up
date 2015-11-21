@@ -30,6 +30,8 @@ public class MainPanelModel {
     private int xPos;       //Current mouse pressed pos
     private int yPos ;
     private boolean draggingRectangle;
+    private boolean draggingCircle;
+    private boolean isOCREnabled;
     private Font annotationFont;
     private Color annotationFontColor;
     private int mouseBoxWidth = 10;
@@ -53,6 +55,8 @@ public class MainPanelModel {
         blurredAnnotationColor = Color.LIGHT_GRAY;
         focusedAnnotationColor = Color.RED;
         draggingRectangle = false;
+        draggingCircle = false;
+        isOCREnabled = false;
         initState();
     }
 
@@ -222,6 +226,23 @@ public class MainPanelModel {
     public void setCurrentSelectedAnnotationRectangle(AnnotationRectangle currentSelectedAnnotationRectangle) {
         this.currentSelectedAnnotationRectangle = currentSelectedAnnotationRectangle;
     }
+
+    public boolean isOCREnabled() {
+        return isOCREnabled;
+    }
+
+    public void setIsOCREnabled(boolean isOCREnabled) {
+        this.isOCREnabled = isOCREnabled;
+    }
+
+    public boolean isDraggingCircle() {
+        return draggingCircle;
+    }
+
+    public void setDraggingCircle(boolean draggingCircle) {
+        this.draggingCircle = draggingCircle;
+    }
+    
     
     
     

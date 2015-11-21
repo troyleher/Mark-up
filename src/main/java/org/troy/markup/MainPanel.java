@@ -5,10 +5,8 @@
  */
 package org.troy.markup;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -18,7 +16,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,25 +27,12 @@ import org.troy.utilities.OCR;
  *
  * @author Troy
  */
-public class MainPanel extends JPanel implements MouseListener, MouseMotionListener {
+public class MainPanel extends JPanel  {
 
-   
-    private boolean isOCREnabled = false;
-    private ArrayList<AnnotationRectangle> selectionList = new ArrayList<>();
-    private AnnotationCircle currentAnnotationSymbol;
     private MainPanelModel model;
 
     public MainPanel() {
         this.model = new MainPanelModel(this);
-
-        addMouseListener(this);
-        addMouseMotionListener(this);
-
-        AnnotationCircleMouseListener circleListener
-                = new AnnotationCircleMouseListener(model);
-        addMouseListener(circleListener);
-        addMouseMotionListener(circleListener);
-
     }
 
     @Override
@@ -93,40 +77,7 @@ public class MainPanel extends JPanel implements MouseListener, MouseMotionListe
         paintAnnotationLetter(g2d, rect.getAnnotation());
     }
 
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        Iterator<AnnotationRectangle> sList = 
-                model.getAnnotationRectangleList().iterator();
-        Graphics2D g2d = (Graphics2D) this.getGraphics();
-        Rectangle mouseBox = model.getMouseBox(e.getX(), e.getY());
-        while (sList.hasNext()) {
-            AnnotationRectangle rect = sList.next();
-            if (g2d.hit(mouseBox, rect, true)) {
-                //System.out.println("Rectangle clicked");
-                setSelected(rect);
-            }
-
-        }
-
-        //System.out.println("Mouse clicked");
-    }
-
-    private void setSelected(AnnotationRectangle rect) {
-        if (model.getCurrentSelectedAnnotationRectangle() != null) {
-            model.getCurrentSelectedAnnotationRectangle().setIsFocus(false);
-        }
-        rect.setIsFocus(true);
-        model.setCurrentSelectedAnnotationRectangle(rect);
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-        model.setxPos(e.getX());
-        model.setyPos(e.getY());
-        model.setDraggingRectangle(true);
-
-    }
-
+    
     @Override
     public Dimension getPreferredSize() {
         if(model.getImage() != null){
@@ -136,68 +87,7 @@ public class MainPanel extends JPanel implements MouseListener, MouseMotionListe
         return null;
     }
 
-    @Override
-    public void mouseReleased(MouseEvent e) {
-       model.setDraggingRectangle(false);
-
-        //System.out.println("Mouse released");
-        //System.out.println("x=" + xTop + " y=" + yTop + " width=" + width + " height=" + height);
-        saveAnnotationRectangle();
-        if (isOCREnabled) {
-            performOCR();
-        }
-        repaint();
-        model.setDragHeight(0);
-        model.setDragWidth(0);
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseDragged(MouseEvent e) {
-        model.setDragWidth(e.getX() - model.getxPos());
-        model.setDragHeight(e.getY() - model.getyPos());
-        repaint();
-    }
-
-    @Override
-    public void mouseMoved(MouseEvent e) {
-
-    }
-
-    private void performOCR() {
-        BufferedImage imageToOCR = ((BufferedImage)model.getImage()).getSubimage(model.getxPos(),
-                model.getyPos(),
-                model.getDragWidth(),
-                model.getDragHeight());
-        try {
-            String result = OCR.parseImage(imageToOCR, "eng");
-            //System.out.println(result);
-        } catch (TesseractException ex) {
-            Logger.getLogger(MainPanel.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    //done
-    private void saveAnnotationRectangle() {
-        if (model.getDragWidth() > MainPanelModel.MIN_RECTANGLE_WIDTH
-                && model.getDragHeight() > MainPanelModel.MIN_RECTANGLE_HEIGHT
-                && model.getCurrentPressedCircle() == null) {
-            AnnotationRectangle rect = new AnnotationRectangle(model.getxPos(),
-                    model.getyPos(),
-                    model.getDragWidth(),
-                    model.getDragHeight());
-            model.addAnnotationRectangleToList(rect);
-        }
-    }
-
+   
     //done
     private void paintAnnotationLetter(Graphics2D g2d, AnnotationCircle annotation) {
         g2d.setFont(model.getAnnotationFont());
@@ -212,5 +102,14 @@ public class MainPanel extends JPanel implements MouseListener, MouseMotionListe
     public void setImage(BufferedImage image) {
         model.setImage(image);
     }
+
+    public MainPanelModel getModel() {
+        return model;
+    }
+
+    public void setModel(MainPanelModel model) {
+        this.model = model;
+    }
+    
 
 }

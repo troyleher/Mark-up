@@ -19,12 +19,12 @@ import java.util.Iterator;
 public class AnnotationCircleMouseListener implements MouseListener, MouseMotionListener {
 
     private MainPanelModel model;
+    private double xDistanceBtwMouseAndCircle;
+    private double yDistanceBtwMouseAndCircle;
 
     public AnnotationCircleMouseListener(MainPanelModel model) {
         this.model = model;
     }
-
-  
 
     @Override
     public void mouseClicked(MouseEvent e) {
@@ -42,6 +42,7 @@ public class AnnotationCircleMouseListener implements MouseListener, MouseMotion
                 model.setCurrentFocusedCircle(circle);
                 System.out.println("Mouse Clicked on circle");
                 model.getPanel().repaint();
+                
             }
 
         }
@@ -55,17 +56,20 @@ public class AnnotationCircleMouseListener implements MouseListener, MouseMotion
         Rectangle mousePoint = model.getMouseBox(e.getX(), e.getY());
 
         while (rectList.hasNext()) {
-            AnnotationCircle annotationCircle = rectList.next().getAnnotation();
-            if (g2d.hit(mousePoint, annotationCircle, true)) {
+            AnnotationCircle circle = rectList.next().getAnnotation();
+            if (g2d.hit(mousePoint, circle, true)) {
                 //System.out.println("Annotation Symbol clicked");
-                model.setCurrentPressedCircle(annotationCircle); 
+                model.setCurrentPressedCircle(circle);
+                xDistanceBtwMouseAndCircle = circle.x - e.getX();
+                yDistanceBtwMouseAndCircle = circle.y - e.getY();
             }
         }
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-       model.setCurrentPressedCircle(null);
+        model.setCurrentPressedCircle(null);
+        model.setDraggingCircle(false);
     }
 
     @Override
@@ -82,9 +86,11 @@ public class AnnotationCircleMouseListener implements MouseListener, MouseMotion
     public void mouseDragged(MouseEvent e) {
         AnnotationCircle circle = model.getCurrentPressedCircle();
         if (circle != null) {
+            model.setDraggingCircle(true);
             System.out.println("Before dragg x=" + circle.x);
-            circle.x = e.getX()-20;
-            circle.y = e.getY()-20 ;
+            circle.x = e.getX() + xDistanceBtwMouseAndCircle;
+            circle.y = e.getY() + yDistanceBtwMouseAndCircle;
+            model.getPanel().repaint();
         }
     }
 

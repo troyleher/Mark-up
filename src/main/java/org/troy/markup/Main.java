@@ -44,6 +44,17 @@ public class Main {
             BufferedImage image = ImageIO.read(getClass().getResourceAsStream("/images/test3.png"));
             panel = new MainPanel();
             panel.setImage(image);
+            
+            AnnotationCircleMouseListener circleListener
+                    = new AnnotationCircleMouseListener(panel.getModel());
+            panel.addMouseListener(circleListener);
+            panel.addMouseMotionListener(circleListener);
+            
+            AnnotationRectangleMouseEventHandler rectangleListener 
+                    = new AnnotationRectangleMouseEventHandler(panel.getModel());
+            panel.addMouseListener(rectangleListener);
+            panel.addMouseMotionListener(rectangleListener);
+            
             frame.add(panel);
             frame.pack();
             frame.setVisible(true);
