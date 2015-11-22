@@ -11,6 +11,11 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.Iterator;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -34,17 +39,29 @@ public class AnnotationCircleMouseListener implements MouseListener, MouseMotion
 
         while (rectList.hasNext()) {
             AnnotationCircle circle = rectList.next().getAnnotation();
-            if (g2d.hit(mouseBox, circle, true)) {
+            if (g2d.hit(mouseBox, circle, false)) {
+
+                if (e.getClickCount() == 1) {
+                    circle.setIsFocused(true);
+                    model.setCurrentFocusedCircle(circle);
+                    System.out.println("Mouse Clicked on circle");
+                    model.getPanel().repaint();
+                }
+                if(e.getClickCount() == 2 && !e.isConsumed()){
+                    e.consume();
+                   JDialog d = new JDialog((JFrame)SwingUtilities.getWindowAncestor(e.getComponent()), true);
+                   d.add(new AnnotationEditingPanel());
+                   d.setLocation(e.getX()+20, e.getY()+20);
+                   d.pack();
+                   d.setVisible(true);
+                }
+
+            } else {
                 if (model.getCurrentFocusedCircle() != null) {
                     model.getCurrentFocusedCircle().setIsFocused(false);
+                    model.setCurrentFocusedCircle(null);
                 }
-                circle.setIsFocused(true);
-                model.setCurrentFocusedCircle(circle);
-                System.out.println("Mouse Clicked on circle");
-                model.getPanel().repaint();
-                
             }
-
         }
     }
 
@@ -57,7 +74,7 @@ public class AnnotationCircleMouseListener implements MouseListener, MouseMotion
 
         while (rectList.hasNext()) {
             AnnotationCircle circle = rectList.next().getAnnotation();
-            if (g2d.hit(mousePoint, circle, true)) {
+            if (g2d.hit(mousePoint, circle, false)) {
                 //System.out.println("Annotation Symbol clicked");
                 model.setCurrentPressedCircle(circle);
                 xDistanceBtwMouseAndCircle = circle.x - e.getX();
@@ -69,6 +86,7 @@ public class AnnotationCircleMouseListener implements MouseListener, MouseMotion
     @Override
     public void mouseReleased(MouseEvent e) {
         model.setCurrentPressedCircle(null);
+
         model.setDraggingCircle(false);
     }
 

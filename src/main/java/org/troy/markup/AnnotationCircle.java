@@ -5,6 +5,7 @@
  */
 package org.troy.markup;
 
+
 import java.awt.geom.Ellipse2D;
 
 /**
@@ -16,7 +17,12 @@ public class AnnotationCircle extends Ellipse2D.Double {
     private boolean isFocused;
     
     public AnnotationCircle(double x, double y, String letter){
-        super(x, y, 20, 20);
+        this(x, y, 20, 20, letter);
+        
+    }
+    public AnnotationCircle(double x, double y, double width,
+            double height, String letter){
+        super(x, y, width, height);
         this.letter = letter;
     }
 
@@ -25,6 +31,10 @@ public class AnnotationCircle extends Ellipse2D.Double {
      */
     public String getLetter() {
         return letter;
+    }
+
+    public void setLetter(String letter) {
+        this.letter = letter;
     }
 
     /**
@@ -40,6 +50,12 @@ public class AnnotationCircle extends Ellipse2D.Double {
     public void setIsFocused(boolean isFocused) {
         this.isFocused = isFocused;
     }
+
+    public void setX(double x) {
+        this.x = x;
+    }
+    
+    
     
     
     

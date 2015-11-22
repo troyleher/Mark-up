@@ -15,7 +15,9 @@ import java.awt.Stroke;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.font.TextAttribute;
 import java.awt.image.BufferedImage;
+import java.text.AttributedString;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -90,9 +92,14 @@ public class MainPanel extends JPanel  {
    
     //done
     private void paintAnnotationLetter(Graphics2D g2d, AnnotationCircle annotation) {
-        g2d.setFont(model.getAnnotationFont());
-        g2d.setColor(model.getAnnotationFontColor());
-        g2d.drawString(annotation.getLetter(), (int) annotation.x + 6, (int) annotation.y + 15);
+        String letter = annotation.getLetter();
+        AttributedString as = new AttributedString(letter);
+        if(letter.length() > 1){
+            as.addAttribute(TextAttribute.SUPERSCRIPT, TextAttribute.SUPERSCRIPT_SUPER, 1, letter.length());
+        }
+        as.addAttribute(TextAttribute.FONT, model.getAnnotationFont());
+        as.addAttribute(TextAttribute.FOREGROUND, model.getAnnotationFontColor());
+        g2d.drawString(as.getIterator(), (int) annotation.x + 6, (int) annotation.y + 15);
     }
 
     public Image getImage() {
