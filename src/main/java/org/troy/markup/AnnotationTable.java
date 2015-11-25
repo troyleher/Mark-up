@@ -5,10 +5,17 @@
  */
 package org.troy.markup;
 
+import javax.swing.JTable;
+import javax.swing.table.TableModel;
+
 /**
  *
  * @author Troy
  */
-public class AnnotationModel {
+public class AnnotationTable extends JTable{
+    
+    public AnnotationTable(TableModel dataModel){
+        super(dataModel);
+    }
     
 }

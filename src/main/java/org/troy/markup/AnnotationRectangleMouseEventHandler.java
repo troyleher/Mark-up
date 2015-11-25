@@ -31,15 +31,16 @@ public class AnnotationRectangleMouseEventHandler implements MouseListener, Mous
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        Iterator<AnnotationRectangle> sList
-                = model.getAnnotationRectangleList().iterator();
+        Iterator<Annotation> sList
+                = model.getAnnotationList().iterator();
         Graphics2D g2d = (Graphics2D) model.getPanel().getGraphics();
         Rectangle mouseBox = model.getMouseBox(e.getX(), e.getY());
         while (sList.hasNext()) {
-            AnnotationRectangle rect = sList.next();
+            Annotation annotation = sList.next();
+            AnnotationRectangle rect = annotation.getSelectionBox();
             if (g2d.hit(mouseBox, rect, true)) {
                 //System.out.println("Rectangle clicked");
-                setSelected(rect);
+               model.highlightAnnotation(annotation);
             }
 
         }
@@ -98,11 +99,12 @@ public class AnnotationRectangleMouseEventHandler implements MouseListener, Mous
         if (model.getDragWidth() > MainPanelModel.MIN_RECTANGLE_WIDTH
                 && model.getDragHeight() > MainPanelModel.MIN_RECTANGLE_HEIGHT
                 && model.getCurrentPressedCircle() == null) {
-            AnnotationRectangle rect = new AnnotationRectangle(model.getxPos(),
+            
+            Annotation annotation = new Annotation(model.getxPos(),
                     model.getyPos(),
                     model.getDragWidth(),
                     model.getDragHeight());
-            model.addAnnotationRectangleToList(rect);
+            model.addAnnotationToList(annotation);
         }
     }
 
@@ -119,12 +121,6 @@ public class AnnotationRectangleMouseEventHandler implements MouseListener, Mous
         }
     }
 
-    private void setSelected(AnnotationRectangle rect) {
-        if (model.getCurrentSelectedAnnotationRectangle() != null) {
-            model.getCurrentSelectedAnnotationRectangle().setIsFocus(false);
-        }
-        rect.setIsFocus(true);
-        model.setCurrentSelectedAnnotationRectangle(rect);
-    }
+  
 
 }

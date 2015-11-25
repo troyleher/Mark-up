@@ -5,6 +5,8 @@
  */
 package org.troy.markup;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -18,8 +20,11 @@ public class Annotation {
 
     private AnnotationRectangle selectionBox;
     private AnnotationCircle selectionLabel;
-
     private String details;
+    private boolean highlight;
+
+    private PropertyChangeSupport pcs = new PropertyChangeSupport(this);
+
     public Annotation() {
     }
 
@@ -34,7 +39,9 @@ public class Annotation {
     }
 
     public void setDetails(String details) {
+        String oldDetails = this.details;
         this.details = details;
+        pcs.firePropertyChange("details", oldDetails, details);
     }
 
     public AnnotationRectangle getSelectionBox() {
@@ -55,6 +62,14 @@ public class Annotation {
         this.selectionLabel = selectionLabel;
     }
 
+    public boolean isHighlight() {
+        return highlight;
+    }
+
+    public void setHighlight(boolean highlight) {
+        this.highlight = highlight;
+    }
+
     @XmlElement(name = "circleModel")
     /**
      * Used only for JAXB marshaling to populate/serialize AnnotationCircle
@@ -70,6 +85,14 @@ public class Annotation {
             selectionLabel.height = model.getHeight();
             selectionLabel.setLetter(model.getLabelID());
         }
+    }
+
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        this.pcs.addPropertyChangeListener(listener);
+    }
+
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        this.pcs.removePropertyChangeListener(listener);
     }
 
     /**

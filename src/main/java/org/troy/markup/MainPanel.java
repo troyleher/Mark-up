@@ -10,20 +10,12 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.Rectangle;
 import java.awt.Stroke;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.awt.font.TextAttribute;
 import java.awt.image.BufferedImage;
 import java.text.AttributedString;
 import java.util.Iterator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JPanel;
-import net.sourceforge.tess4j.TesseractException;
-import org.troy.utilities.OCR;
 
 /**
  *
@@ -35,6 +27,7 @@ public class MainPanel extends JPanel  {
 
     public MainPanel() {
         this.model = new MainPanelModel(this);
+        
     }
 
     @Override
@@ -45,38 +38,37 @@ public class MainPanel extends JPanel  {
         if (model.getImage() != null) {
             g.drawImage(model.getImage(), 0, 0, null);
         }
-        if (model.isDraggingRectangle() && model.getCurrentFocusedCircle() == null) {
+        if (model.isDraggingRectangle() && !model.isDraggingCircle()) {
             g2d.drawRect(model.getxPos(),
                     model.getyPos(),
                     model.getDragWidth(),
                     model.getDragHeight());
         }
-        Iterator<AnnotationRectangle> sList = 
-                model.getAnnotationRectangleList().iterator();
-        while (sList.hasNext()) {
-            AnnotationRectangle rect = sList.next();
-            if (!rect.isFocus()) {
+        Iterator<Annotation> annotationList = 
+                model.getAnnotationList().iterator();
+        while (annotationList.hasNext()) {
+            Annotation annotation = annotationList.next();
+            if (!annotation.getSelectionBox().isFocus()) {
                 paintAnnotation(g2d,
-                        rect,
+                        annotation,
                         model.getBlurredAnnotationColor(),
                         model.getBlurredAnnotationStroke());
 
             } else {
                 paintAnnotation(g2d,
-                        rect,
+                        annotation,
                         model.getFocusedAnnotationColor(),
                         model.getFocusedAnnotationStroke());
             }
         }
     }
 
-    private void paintAnnotation(Graphics2D g2d, AnnotationRectangle rect, Color c, Stroke stroke) {
+    private void paintAnnotation(Graphics2D g2d, Annotation annotation, Color c, Stroke stroke) {
         g2d.setStroke(stroke);
         g2d.setColor(c);
-        g2d.draw(rect);
-        g2d.draw(rect.getAnnotation());
-
-        paintAnnotationLetter(g2d, rect.getAnnotation());
+        g2d.draw(annotation.getSelectionBox());
+        g2d.draw(annotation.getSelectionLabel());
+        paintAnnotationLetter(g2d, annotation.getSelectionLabel());
     }
 
     

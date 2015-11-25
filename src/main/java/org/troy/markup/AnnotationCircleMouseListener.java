@@ -5,6 +5,7 @@
  */
 package org.troy.markup;
 
+import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
@@ -34,11 +35,12 @@ public class AnnotationCircleMouseListener implements MouseListener, MouseMotion
     @Override
     public void mouseClicked(MouseEvent e) {
         Graphics2D g2d = (Graphics2D) e.getComponent().getGraphics();
-        Iterator<AnnotationRectangle> rectList = model.getAnnotationRectangleList().iterator();
+        Iterator<Annotation> annotationList = model.getAnnotationList().iterator();
         Rectangle mouseBox = Utilities.getMouseBox(e);
 
-        while (rectList.hasNext()) {
-            AnnotationCircle circle = rectList.next().getAnnotation();
+        while (annotationList.hasNext()) {
+            Annotation annotation = annotationList.next();
+            AnnotationCircle circle = annotation.getSelectionLabel();
             if (g2d.hit(mouseBox, circle, false)) {
 
                 if (e.getClickCount() == 1) {
@@ -46,14 +48,15 @@ public class AnnotationCircleMouseListener implements MouseListener, MouseMotion
                     model.setCurrentFocusedCircle(circle);
                     System.out.println("Mouse Clicked on circle");
                     model.getPanel().repaint();
+
                 }
-                if(e.getClickCount() == 2 && !e.isConsumed()){
+                if (e.getClickCount() == 2 && !e.isConsumed()) {
                     e.consume();
-                   JDialog d = new JDialog((JFrame)SwingUtilities.getWindowAncestor(e.getComponent()), true);
-                   d.add(new AnnotationEditingPanel());
-                   d.setLocation(e.getX()+20, e.getY()+20);
+                    JDialog d = new JDialog((JFrame) SwingUtilities.getWindowAncestor(e.getComponent()), true);
+                    d.add(new AnnotationEditingPanel(annotation));
+                    d.setLocation(e.getX() + 20, e.getY() + 20);
                    d.pack();
-                   d.setVisible(true);
+                    d.setVisible(true);
                 }
 
             } else {
@@ -68,17 +71,20 @@ public class AnnotationCircleMouseListener implements MouseListener, MouseMotion
     @Override
     public void mousePressed(MouseEvent e) {
 
-        Iterator<AnnotationRectangle> rectList = model.getAnnotationRectangleList().iterator();
+        Iterator<Annotation> annotationList = model.getAnnotationList().iterator();
         Graphics2D g2d = (Graphics2D) e.getComponent().getGraphics();
         Rectangle mousePoint = model.getMouseBox(e.getX(), e.getY());
 
-        while (rectList.hasNext()) {
-            AnnotationCircle circle = rectList.next().getAnnotation();
+        while (annotationList.hasNext()) {
+            Annotation annotation = annotationList.next();
+            AnnotationCircle circle = annotation.getSelectionLabel();
             if (g2d.hit(mousePoint, circle, false)) {
                 //System.out.println("Annotation Symbol clicked");
                 model.setCurrentPressedCircle(circle);
                 xDistanceBtwMouseAndCircle = circle.x - e.getX();
                 yDistanceBtwMouseAndCircle = circle.y - e.getY();
+                model.highlightAnnotation(annotation);
+                e.getComponent().repaint();
             }
         }
     }
@@ -86,7 +92,6 @@ public class AnnotationCircleMouseListener implements MouseListener, MouseMotion
     @Override
     public void mouseReleased(MouseEvent e) {
         model.setCurrentPressedCircle(null);
-
         model.setDraggingCircle(false);
     }
 

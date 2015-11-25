@@ -11,6 +11,8 @@ import java.awt.Font;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.Stroke;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.Iterator;
 import javax.swing.JPanel;
@@ -23,12 +25,13 @@ public class MainPanelModel {
 
     public static int MIN_RECTANGLE_WIDTH = 10;
     public static int MIN_RECTANGLE_HEIGHT = 10;
+    public static String ADD_ANNOTATION_TO_LIST = "addAnnotationToList";
 
     private AnnotationRectangle currentSelectedAnnotationRectangle;
     private int dragWidth;  //Current dragged width
     private int dragHeight;
     private int xPos;       //Current mouse pressed pos
-    private int yPos ;
+    private int yPos;
     private boolean draggingRectangle;
     private boolean draggingCircle;
     private boolean isOCREnabled;
@@ -36,15 +39,16 @@ public class MainPanelModel {
     private Color annotationFontColor;
     private int mouseBoxWidth = 10;
     private int mouseboxHieght = 10;
-    private Stroke focusedAnnotationStroke ;
-    private Stroke blurredAnnotationStroke ;
+    private Stroke focusedAnnotationStroke;
+    private Stroke blurredAnnotationStroke;
     private Color focusedAnnotationColor;
     private Color blurredAnnotationColor;
     private AnnotationCircle currentFocusedCircle;
     private AnnotationCircle currentPressedCircle;
-    private ArrayList<AnnotationRectangle> rectList = new ArrayList<>();
+    private ArrayList<Annotation> annotationList = new ArrayList<>();
     private JPanel panel;
     private Image image;
+    private PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
     public MainPanelModel(JPanel panel) {
         this.panel = panel;
@@ -61,11 +65,11 @@ public class MainPanelModel {
     }
 
     private void initState() {
-        Iterator<AnnotationRectangle> list = rectList.iterator();
+        Iterator<Annotation> list = annotationList.iterator();
         while (list.hasNext()) {
-            AnnotationRectangle rect = list.next();
-            if (rect.getAnnotation().isFocused()) {
-                currentFocusedCircle = rect.getAnnotation();
+            Annotation annotation = list.next();
+            if (annotation.getSelectionLabel().isFocused()) {
+                currentFocusedCircle = annotation.getSelectionLabel();
             }
         }
     }
@@ -105,12 +109,13 @@ public class MainPanelModel {
         return panel;
     }
 
-    public void addAnnotationRectangleToList(AnnotationRectangle rect) {
-        this.rectList.add(rect);
+    public void addAnnotationToList(Annotation annotation) {
+        this.annotationList.add(annotation);
+        pcs.firePropertyChange(ADD_ANNOTATION_TO_LIST, null, annotation);
     }
 
-    public ArrayList<AnnotationRectangle> getAnnotationRectangleList() {
-        return rectList;
+    public ArrayList<Annotation> getAnnotationList() {
+        return annotationList;
     }
 
     public Rectangle getMouseBox(int x, int y) {
@@ -242,12 +247,21 @@ public class MainPanelModel {
     public void setDraggingCircle(boolean draggingCircle) {
         this.draggingCircle = draggingCircle;
     }
-    
-    
-    
-    
-    
-    
-    
+
+    public void highlightAnnotation(Annotation annotation) {
+        if (this.getCurrentSelectedAnnotationRectangle() != null) {
+            this.getCurrentSelectedAnnotationRectangle().setIsFocus(false);
+        }
+        annotation.getSelectionBox().setIsFocus(true);
+        this.setCurrentSelectedAnnotationRectangle(annotation.getSelectionBox());
+    }
+
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        this.pcs.addPropertyChangeListener(listener);
+    }
+
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        this.pcs.removePropertyChangeListener(listener);
+    }
 
 }

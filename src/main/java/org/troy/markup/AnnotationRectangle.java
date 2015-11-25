@@ -15,12 +15,11 @@ import java.util.ArrayList;
 public class AnnotationRectangle extends Rectangle.Double{
     
     private boolean isFocus = false;
-    private AnnotationCircle annotation ;
+   
     
     
     public AnnotationRectangle(double x, double y, double width, double height){
         super(x, y, width, height);
-        annotation = new AnnotationCircle(x - 25, y, AnnotationLetterFactory.createLetter());
     }
 
     /**
@@ -37,13 +36,7 @@ public class AnnotationRectangle extends Rectangle.Double{
         this.isFocus = isFocus;
     }
 
-    /**
-     * @return the annotation
-     */
-    public AnnotationCircle getAnnotation() {
-        return annotation;
-    }
-    
+  
     
     
     
