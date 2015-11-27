@@ -5,6 +5,8 @@
  */
 package org.troy.markup;
 
+import org.troy.markup.beans.AnnotationRectangleBean;
+import org.troy.markup.beans.AnnotationCircleBean;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
@@ -16,18 +18,21 @@ import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.Iterator;
 import javax.swing.JPanel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 /**
  *
  * @author Troy
  */
-public class MainPanelModel {
+public class MainPanelModel implements ListSelectionListener {
 
     public static int MIN_RECTANGLE_WIDTH = 10;
     public static int MIN_RECTANGLE_HEIGHT = 10;
     public static String ADD_ANNOTATION_TO_LIST = "addAnnotationToList";
+    public static String CURRENT_SELECTED_RECTANGLE = "setCurrentSelectedAnnotationRectangle";
 
-    private AnnotationRectangle currentSelectedAnnotationRectangle;
+    private AnnotationRectangleBean currentSelectedAnnotationRectangle;
     private int dragWidth;  //Current dragged width
     private int dragHeight;
     private int xPos;       //Current mouse pressed pos
@@ -43,8 +48,8 @@ public class MainPanelModel {
     private Stroke blurredAnnotationStroke;
     private Color focusedAnnotationColor;
     private Color blurredAnnotationColor;
-    private AnnotationCircle currentFocusedCircle;
-    private AnnotationCircle currentPressedCircle;
+    private AnnotationCircleBean currentFocusedCircle;
+    private AnnotationCircleBean currentPressedCircle;
     private ArrayList<Annotation> annotationList = new ArrayList<>();
     private JPanel panel;
     private Image image;
@@ -61,44 +66,34 @@ public class MainPanelModel {
         draggingRectangle = false;
         draggingCircle = false;
         isOCREnabled = false;
-        initState();
-    }
 
-    private void initState() {
-        Iterator<Annotation> list = annotationList.iterator();
-        while (list.hasNext()) {
-            Annotation annotation = list.next();
-            if (annotation.getSelectionLabel().isFocused()) {
-                currentFocusedCircle = annotation.getSelectionLabel();
-            }
-        }
     }
 
     /**
      * @return the currentFocusedCircle
      */
-    public AnnotationCircle getCurrentFocusedCircle() {
+    public AnnotationCircleBean getCurrentFocusedCircle() {
         return currentFocusedCircle;
     }
 
     /**
      * @param currentFocusedCircle the currentFocusedCircle to set
      */
-    public void setCurrentFocusedCircle(AnnotationCircle currentFocusedCircle) {
+    public void setCurrentFocusedCircle(AnnotationCircleBean currentFocusedCircle) {
         this.currentFocusedCircle = currentFocusedCircle;
     }
 
     /**
      * @return the currentPressedCircle
      */
-    public AnnotationCircle getCurrentPressedCircle() {
+    public AnnotationCircleBean getCurrentPressedCircle() {
         return currentPressedCircle;
     }
 
     /**
      * @param currentPressedCircle the currentPressedCircle to set
      */
-    public void setCurrentPressedCircle(AnnotationCircle currentPressedCircle) {
+    public void setCurrentPressedCircle(AnnotationCircleBean currentPressedCircle) {
         this.currentPressedCircle = currentPressedCircle;
     }
 
@@ -224,12 +219,18 @@ public class MainPanelModel {
         this.dragHeight = dragHeight;
     }
 
-    public AnnotationRectangle getCurrentSelectedAnnotationRectangle() {
+    public AnnotationRectangleBean getCurrentSelectedAnnotationRectangle() {
         return currentSelectedAnnotationRectangle;
     }
 
-    public void setCurrentSelectedAnnotationRectangle(AnnotationRectangle currentSelectedAnnotationRectangle) {
+    public void setCurrentSelectedAnnotationRectangle(AnnotationRectangleBean currentSelectedAnnotationRectangle) {
+        AnnotationRectangleBean oldBean = this.currentSelectedAnnotationRectangle;
         this.currentSelectedAnnotationRectangle = currentSelectedAnnotationRectangle;
+        if (oldBean == null || !oldBean.equals(currentSelectedAnnotationRectangle)) {
+            pcs.firePropertyChange(CURRENT_SELECTED_RECTANGLE, oldBean, currentSelectedAnnotationRectangle);
+        }
+        System.out.println("current rectangle changed");
+
     }
 
     public boolean isOCREnabled() {
@@ -249,11 +250,13 @@ public class MainPanelModel {
     }
 
     public void highlightAnnotation(Annotation annotation) {
-        if (this.getCurrentSelectedAnnotationRectangle() != null) {
-            this.getCurrentSelectedAnnotationRectangle().setIsFocus(false);
-        }
-        annotation.getSelectionBox().setIsFocus(true);
-        this.setCurrentSelectedAnnotationRectangle(annotation.getSelectionBox());
+        /**
+         * if (this.getCurrentSelectedAnnotationRectangle() != null) {
+         * this.getCurrentSelectedAnnotationRectangle().setIsFocus(false); }
+         *
+         */
+        //annotation.getAnnotationRectangle().setIsFocus(true);
+        this.setCurrentSelectedAnnotationRectangle(annotation.getAnnotationRectangle());
     }
 
     public void addPropertyChangeListener(PropertyChangeListener listener) {
@@ -262,6 +265,19 @@ public class MainPanelModel {
 
     public void removePropertyChangeListener(PropertyChangeListener listener) {
         this.pcs.removePropertyChangeListener(listener);
+    }
+
+    @Override
+    public void valueChanged(ListSelectionEvent e) {
+        if(!e.getValueIsAdjusting()){
+            Annotation a = annotationList.get(e.getFirstIndex());
+            if (currentSelectedAnnotationRectangle == null
+                    || !currentSelectedAnnotationRectangle.equals(a.getAnnotationRectangle())) {
+                setCurrentSelectedAnnotationRectangle(a.getAnnotationRectangle());
+            }
+            System.out.println("List selection changed");
+        }
+        
     }
 
 }

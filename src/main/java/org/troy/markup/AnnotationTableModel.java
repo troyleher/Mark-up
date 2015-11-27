@@ -45,7 +45,7 @@ public class AnnotationTableModel extends AbstractTableModel implements Property
         String cell;
         switch (columnIndex) {
             case 0:
-                cell = annotation.getSelectionLabel().getLetter();
+                cell = annotation.getAnnotationCircle().getSymbol();
                 break;
             case 1:
                 cell = annotation.getDetails();
@@ -67,5 +67,11 @@ public class AnnotationTableModel extends AbstractTableModel implements Property
         }
         fireTableDataChanged();
     }
+
+    public ArrayList<Annotation> getAnnotationList() {
+        return annotationList;
+    }
+    
+    
 
 }

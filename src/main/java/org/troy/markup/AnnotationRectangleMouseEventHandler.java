@@ -5,6 +5,7 @@
  */
 package org.troy.markup;
 
+import org.troy.markup.beans.AnnotationRectangleBean;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
@@ -37,8 +38,8 @@ public class AnnotationRectangleMouseEventHandler implements MouseListener, Mous
         Rectangle mouseBox = model.getMouseBox(e.getX(), e.getY());
         while (sList.hasNext()) {
             Annotation annotation = sList.next();
-            AnnotationRectangle rect = annotation.getSelectionBox();
-            if (g2d.hit(mouseBox, rect, true)) {
+            AnnotationRectangleBean rect = annotation.getAnnotationRectangle();
+            if (g2d.hit(mouseBox, Utilities.createRectangle(rect), true)) {
                 //System.out.println("Rectangle clicked");
                model.highlightAnnotation(annotation);
             }
@@ -105,6 +106,7 @@ public class AnnotationRectangleMouseEventHandler implements MouseListener, Mous
                     model.getDragWidth(),
                     model.getDragHeight());
             model.addAnnotationToList(annotation);
+            
         }
     }
 

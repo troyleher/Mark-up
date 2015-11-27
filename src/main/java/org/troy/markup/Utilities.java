@@ -5,8 +5,12 @@
  */
 package org.troy.markup;
 
+import org.troy.markup.beans.AnnotationRectangleBean;
+import org.troy.markup.beans.AnnotationCircleBean;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.Rectangle2D;
 
 /**
  *
@@ -23,6 +27,12 @@ public class Utilities {
                 mouseBoxWidth,
                 mouseBoxHieght);
         return box;
+    }
+    public static Ellipse2D.Double createCircle(AnnotationCircleBean bean){
+        return new Ellipse2D.Double(bean.getX(), bean.getY(), bean.getWidth(), bean.getHeight());
+    }
+    public static Rectangle2D.Double createRectangle(AnnotationRectangleBean bean){
+        return new Rectangle2D.Double(bean.getX(), bean.getY(), bean.getWidth(), bean.getHeight());
     }
 
 }

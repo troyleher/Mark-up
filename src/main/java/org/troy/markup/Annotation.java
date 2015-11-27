@@ -5,6 +5,9 @@
  */
 package org.troy.markup;
 
+import org.troy.markup.beans.AnnotationRectangleBean;
+import org.troy.markup.beans.SystemConfigBean;
+import org.troy.markup.beans.AnnotationCircleBean;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import javax.xml.bind.annotation.XmlElement;
@@ -18,10 +21,11 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 public class Annotation {
 
-    private AnnotationRectangle selectionBox;
-    private AnnotationCircle selectionLabel;
+    private AnnotationRectangleBean annotationRectangle;
+    private AnnotationCircleBean annotationCircle;
     private String details;
     private boolean highlight;
+    private SystemConfigBean configBean;
 
     private PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
@@ -29,9 +33,16 @@ public class Annotation {
     }
 
     public Annotation(double x, double y, double width, double height) {
-        selectionBox = new AnnotationRectangle(x, y, width, height);
-        selectionLabel = new AnnotationCircle(x - 25, y, AnnotationLetterFactory.createLetter());
-        details = "TODO";
+        configBean = SystemConfigBean.createSystemConfigBean();
+
+        annotationRectangle = new AnnotationRectangleBean(x, y, width, height);
+        annotationCircle = new AnnotationCircleBean(
+                x - configBean.getCircleXDistanceFromRectangle(),
+                y,
+                configBean.getCircleWidth(),
+                configBean.getCircleHeight(),
+                AnnotationLetterFactory.createLetter());
+        details = configBean.getDetails();
     }
 
     public String getDetails() {
@@ -44,22 +55,20 @@ public class Annotation {
         pcs.firePropertyChange("details", oldDetails, details);
     }
 
-    public AnnotationRectangle getSelectionBox() {
-        return selectionBox;
+    public AnnotationRectangleBean getAnnotationRectangle() {
+        return annotationRectangle;
     }
 
-    @XmlTransient
-    public void setSelectionBox(AnnotationRectangle selectionBox) {
-        this.selectionBox = selectionBox;
+    public void setAnnotationRectangle(AnnotationRectangleBean selectionBox) {
+        this.annotationRectangle = selectionBox;
     }
 
-    public AnnotationCircle getSelectionLabel() {
-        return selectionLabel;
+    public AnnotationCircleBean getAnnotationCircle() {
+        return annotationCircle;
     }
 
-    @XmlTransient
-    public void setSelectionLabel(AnnotationCircle selectionLabel) {
-        this.selectionLabel = selectionLabel;
+    public void setAnnotationcircle(AnnotationCircleBean annotationCircle) {
+        this.annotationCircle = annotationCircle;
     }
 
     public boolean isHighlight() {
@@ -70,66 +79,12 @@ public class Annotation {
         this.highlight = highlight;
     }
 
-    @XmlElement(name = "circleModel")
-    /**
-     * Used only for JAXB marshaling to populate/serialize AnnotationCircle
-     */
-    private void setLabelModel(AnnotationCircleModel model) {
-        if (selectionLabel == null) {
-            selectionLabel = new AnnotationCircle(model.getX(), model.getY(),
-                    model.getWidth(), model.getHeight(), model.getLabelID());
-        } else {
-            selectionLabel.x = model.getX();
-            selectionLabel.y = model.getY();
-            selectionLabel.width = model.getWidth();
-            selectionLabel.height = model.getHeight();
-            selectionLabel.setLetter(model.getLabelID());
-        }
-    }
-
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         this.pcs.addPropertyChangeListener(listener);
     }
 
     public void removePropertyChangeListener(PropertyChangeListener listener) {
         this.pcs.removePropertyChangeListener(listener);
-    }
-
-    /**
-     * Used only for JAXB marshaling to populate/serialize AnnotationCircle
-     */
-    private AnnotationCircleModel getLabelModel() {
-        AnnotationCircleModel model = new AnnotationCircleModel();
-        model.setX(selectionLabel.x);
-        model.setY(selectionLabel.y);
-        model.setWidth(selectionLabel.width);
-        model.setHeight(selectionLabel.height);
-        model.setLabelID(selectionLabel.getLetter());
-        return model;
-    }
-
-    @XmlElement(name = "rectangleModel")
-    private void setSelectionBoxModel(AnnotationRectangleModel m) {
-        if (selectionBox == null) {
-            selectionBox = new AnnotationRectangle(m.getX(),
-                    m.getY(),
-                    m.getWidth(),
-                    m.getHeight());
-        } else {
-            selectionBox.x = m.getX();
-            selectionBox.y = m.getY();
-            selectionBox.width = m.getWidth();
-            selectionBox.height = m.getHeight();
-        }
-    }
-
-    private AnnotationRectangleModel getSelectionBoxModel() {
-        AnnotationRectangleModel m = new AnnotationRectangleModel();
-        m.setX(selectionBox.x);
-        m.setY(selectionBox.y);
-        m.setWidth(selectionBox.width);
-        m.setHeight(selectionBox.height);
-        return m;
     }
 
 }

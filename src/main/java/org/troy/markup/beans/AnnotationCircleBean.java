@@ -3,20 +3,30 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.troy.markup;
+package org.troy.markup.beans;
 
 /**
  *
  * @author Troy
  */
-public class AnnotationCircleModel {
+public class AnnotationCircleBean {
     private double x;
     private double y;
     private double width;
     private double height;
-    private String labelID;
+    private String symbol;
     
-    public AnnotationCircleModel(){}
+    
+    public AnnotationCircleBean(){}
+    public AnnotationCircleBean(double x,
+            double y, double width, double height, String symbol){
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        this.symbol = symbol;
+    
+    }
 
     public double getX() {
         return x;
@@ -50,12 +60,12 @@ public class AnnotationCircleModel {
         this.height = height;
     }
 
-    public String getLabelID() {
-        return labelID;
+    public String getSymbol() {
+        return symbol;
     }
 
-    public void setLabelID(String labelID) {
-        this.labelID = labelID;
+    public void setSymbol(String labelID) {
+        this.symbol = labelID;
     }
     
     

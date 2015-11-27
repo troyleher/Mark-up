@@ -17,6 +17,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 
 /**
@@ -47,6 +48,7 @@ public class Main {
             BufferedImage image = ImageIO.read(getClass().getResourceAsStream("/images/test3.png"));
             mainPanel = new MainPanel();
             mainPanel.setImage(image);
+            
 
             AnnotationCircleMouseListener circleListener
                     = new AnnotationCircleMouseListener(mainPanel.getModel());
@@ -61,8 +63,12 @@ public class Main {
             AnnotationTableModel tableModel = 
                     new AnnotationTableModel(mainPanel.getModel().getAnnotationList());
             AnnotationTable table = new AnnotationTable(tableModel);
+            table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
             JScrollPane scrollTablePane = new JScrollPane(table);
             mainPanel.getModel().addPropertyChangeListener(tableModel);
+            mainPanel.getModel().addPropertyChangeListener(table);
+            mainPanel.getModel().addPropertyChangeListener(mainPanel);
+           table.getSelectionModel().addListSelectionListener(mainPanel.getModel());
             
             
             frame.add(scrollTablePane, BorderLayout.EAST);
