@@ -18,6 +18,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.AttributedString;
 import javax.swing.JPanel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import org.troy.markup.beans.SystemConfigBean;
 
 /**
@@ -112,9 +114,11 @@ public class MainPanel extends JPanel implements PropertyChangeListener {
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if (MainPanelModel.CURRENT_SELECTED_RECTANGLE.equalsIgnoreCase(evt.getPropertyName())) {
+        if (SelectedAnnotation.setAnnotation.equalsIgnoreCase(evt.getPropertyName())) {
             this.repaint();
         }
     }
+
+   
 
 }

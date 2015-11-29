@@ -10,6 +10,8 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Iterator;
 import javax.swing.JTable;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableModel;
 import org.troy.markup.beans.AnnotationRectangleBean;
 
@@ -17,35 +19,38 @@ import org.troy.markup.beans.AnnotationRectangleBean;
  *
  * @author Troy
  */
-public class AnnotationTable extends JTable implements PropertyChangeListener{
-    
-    public AnnotationTable(TableModel dataModel){
+public class AnnotationTable extends JTable implements PropertyChangeListener {
+
+    public AnnotationTable(TableModel dataModel) {
         super(dataModel);
-        
+
     }
+    
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-       if(MainPanelModel.SET_SELECTED_ANNOTATION.equalsIgnoreCase(evt.getPropertyName())){
+        if (SelectedAnnotation.setAnnotation.equalsIgnoreCase(evt.getPropertyName())) {
             setRowSelectionInterval(0,
-                    getAnnotationIndex((AnnotationRectangleBean)evt.getNewValue()));
+                    getAnnotationIndex((Annotation) evt.getNewValue()));
         }
     }
-    private int getAnnotationIndex(AnnotationRectangleBean rectangle) {
-        int index = -1;
-        ArrayList<Annotation> annotationList = 
-                ((AnnotationTableModel)this.getModel()).getAnnotationList();
-        Iterator<Annotation> i = annotationList.iterator();
-        int c = 0;
-        while(i.hasNext()){
-            Annotation a = i.next();
-            AnnotationRectangleBean rect = a.getAnnotationRectangle();
-            if(rect.equals(rectangle)){
-                index = c;
+
+    private int getAnnotationIndex(Annotation selectedAnnotation) {
+        int index = 0;
+        if (selectedAnnotation != null) {
+            ArrayList<Annotation> annotationList
+                    = ((AnnotationTableModel) this.getModel()).getAnnotationList();
+            for (Annotation a : annotationList) {
+                if (a.equals(selectedAnnotation)) {
+                    return index;
+                }
+                index++;
             }
-            c++;
         }
         return index;
     }
+
+
     
+
 }

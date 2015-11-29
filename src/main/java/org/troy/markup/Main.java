@@ -60,8 +60,9 @@ public class Main {
             table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
             JScrollPane scrollTablePane = new JScrollPane(table);
             mainPanel.getModel().addPropertyChangeListener(tableModel);
-            mainPanel.getModel().addPropertyChangeListener(table);
-            mainPanel.getModel().addPropertyChangeListener(mainPanel);
+            mainPanel.getModel().setTable(table);
+            mainPanel.getModel().getSelectedAnnotation().addPropertyChangeListener(table);
+            mainPanel.getModel().getSelectedAnnotation().addPropertyChangeListener(mainPanel);
             table.getSelectionModel().addListSelectionListener(mainPanel.getModel());
             frame.add(scrollTablePane, BorderLayout.EAST);
 

@@ -15,6 +15,8 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import org.troy.markup.view.DrawMouseBehaviour;
@@ -42,13 +44,14 @@ public class MainPanelModel implements ListSelectionListener {
     private Image image;
     private SelectedAnnotation selectedAnnotation = new SelectedAnnotation(null);
     private DrawMouseBehaviour dmb;
+    private JTable table;
     private PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
     public MainPanelModel(JPanel panel) {
         this.panel = panel;
         annotationFont = new Font(Font.SANS_SERIF, Font.BOLD, 12);
         annotationFontColor = Color.BLACK;
-         isOCREnabled = false;
+        isOCREnabled = false;
 
     }
 
@@ -145,8 +148,6 @@ public class MainPanelModel implements ListSelectionListener {
         this.isOCREnabled = isOCREnabled;
     }
 
-   
-
     public DrawMouseBehaviour getDmb() {
         return dmb;
     }
@@ -154,8 +155,6 @@ public class MainPanelModel implements ListSelectionListener {
     public void setDmb(DrawMouseBehaviour dmb) {
         this.dmb = dmb;
     }
-    
-    
 
     public void highlightAnnotation(Annotation annotation) {
         /**
@@ -177,13 +176,16 @@ public class MainPanelModel implements ListSelectionListener {
 
     @Override
     public void valueChanged(ListSelectionEvent e) {
-        if (!e.getValueIsAdjusting()) {
-            Annotation a = annotationList.get(e.getFirstIndex());
-            if (currentSelectedAnnotationRectangle == null
-                    || !currentSelectedAnnotationRectangle.equals(a.getAnnotationRectangle())) {
-                setCurrentSelectedAnnotationRectangle(a.getAnnotationRectangle());
+        Annotation currentAnnotation = selectedAnnotation.getAnnotation();
+        if (currentAnnotation != null && !e.getValueIsAdjusting()) {
+            int itemIndex = table.getSelectedRow();
+            if (itemIndex >= 0) {
+                Annotation a = annotationList.get(itemIndex);
+                if ( !currentAnnotation.equals(a)) {
+                    selectedAnnotation.setAnnotation(a);
+                }
             }
-            System.out.println("List selection changed");
+
         }
 
     }
@@ -198,6 +200,14 @@ public class MainPanelModel implements ListSelectionListener {
         if (!old.equals(selectedAnnotation)) {
             pcs.firePropertyChange(SET_SELECTED_ANNOTATION, old, selectedAnnotation);
         }
+    }
+
+    public JTable getTable() {
+        return table;
+    }
+
+    public void setTable(JTable table) {
+        this.table = table;
     }
 
 }

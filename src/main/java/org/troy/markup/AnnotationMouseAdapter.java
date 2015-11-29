@@ -89,6 +89,7 @@ public class AnnotationMouseAdapter extends MouseAdapter {
                             width,
                             height);
                     model.addAnnotationToList(newAnnotation);
+                    sa.setAnnotation(newAnnotation);
                 }
 
             }

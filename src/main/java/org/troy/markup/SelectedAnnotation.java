@@ -5,6 +5,9 @@
  */
 package org.troy.markup;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+
 /**
  *
  * @author Troy
@@ -13,6 +16,8 @@ public class SelectedAnnotation {
 
     private Annotation annotation;
     private boolean mousePressedOnCircle = false;
+    private PropertyChangeSupport pcs = new PropertyChangeSupport(this);
+    public static String setAnnotation = "setAnnotation";
 
     public SelectedAnnotation(Annotation a) {
         annotation = a;
@@ -23,7 +28,9 @@ public class SelectedAnnotation {
     }
 
     public void setAnnotation(Annotation annotation) {
+        Annotation old = this.annotation;
         this.annotation = annotation;
+        pcs.firePropertyChange(setAnnotation, old, annotation);
     }
 
     public boolean isMousePressedOnCircle() {
@@ -49,6 +56,13 @@ public class SelectedAnnotation {
     @Override
     public int hashCode() {
         return 31 * annotation.hashCode();
+    }
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        this.pcs.addPropertyChangeListener(listener);
+    }
+
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        this.pcs.removePropertyChangeListener(listener);
     }
 
 }
