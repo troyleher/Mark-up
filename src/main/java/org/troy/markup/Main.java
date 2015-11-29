@@ -48,34 +48,27 @@ public class Main {
             BufferedImage image = ImageIO.read(getClass().getResourceAsStream("/images/test3.png"));
             mainPanel = new MainPanel();
             mainPanel.setImage(image);
-            
 
-            AnnotationCircleMouseListener circleListener
-                    = new AnnotationCircleMouseListener(mainPanel.getModel());
-            mainPanel.addMouseListener(circleListener);
-            mainPanel.addMouseMotionListener(circleListener);
+            AnnotationMouseAdapter ama = new AnnotationMouseAdapter(mainPanel.getModel());
 
-            AnnotationRectangleMouseEventHandler rectangleListener
-                    = new AnnotationRectangleMouseEventHandler(mainPanel.getModel());
-            mainPanel.addMouseListener(rectangleListener);
-            mainPanel.addMouseMotionListener(rectangleListener);
+            mainPanel.addMouseListener(ama);
+            mainPanel.addMouseMotionListener(ama);
 
-            AnnotationTableModel tableModel = 
-                    new AnnotationTableModel(mainPanel.getModel().getAnnotationList());
+            AnnotationTableModel tableModel
+                    = new AnnotationTableModel(mainPanel.getModel().getAnnotationList());
             AnnotationTable table = new AnnotationTable(tableModel);
             table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
             JScrollPane scrollTablePane = new JScrollPane(table);
             mainPanel.getModel().addPropertyChangeListener(tableModel);
             mainPanel.getModel().addPropertyChangeListener(table);
             mainPanel.getModel().addPropertyChangeListener(mainPanel);
-           table.getSelectionModel().addListSelectionListener(mainPanel.getModel());
-            
-            
+            table.getSelectionModel().addListSelectionListener(mainPanel.getModel());
             frame.add(scrollTablePane, BorderLayout.EAST);
+
             frame.add(mainPanel, BorderLayout.WEST);
             frame.pack();
             frame.setVisible(true);
-            
+
         } catch (IOException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }

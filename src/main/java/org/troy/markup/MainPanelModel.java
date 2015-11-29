@@ -7,19 +7,17 @@ package org.troy.markup;
 
 import org.troy.markup.beans.AnnotationRectangleBean;
 import org.troy.markup.beans.AnnotationCircleBean;
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.Rectangle;
-import java.awt.Stroke;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
-import java.util.Iterator;
 import javax.swing.JPanel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import org.troy.markup.view.DrawMouseBehaviour;
 
 /**
  *
@@ -31,41 +29,26 @@ public class MainPanelModel implements ListSelectionListener {
     public static int MIN_RECTANGLE_HEIGHT = 10;
     public static String ADD_ANNOTATION_TO_LIST = "addAnnotationToList";
     public static String CURRENT_SELECTED_RECTANGLE = "setCurrentSelectedAnnotationRectangle";
+    public static String SET_SELECTED_ANNOTATION = "setSelectedAnnotation";
 
     private AnnotationRectangleBean currentSelectedAnnotationRectangle;
-    private int dragWidth;  //Current dragged width
-    private int dragHeight;
-    private int xPos;       //Current mouse pressed pos
-    private int yPos;
-    private boolean draggingRectangle;
-    private boolean draggingCircle;
     private boolean isOCREnabled;
     private Font annotationFont;
     private Color annotationFontColor;
-    private int mouseBoxWidth = 10;
-    private int mouseboxHieght = 10;
-    private Stroke focusedAnnotationStroke;
-    private Stroke blurredAnnotationStroke;
-    private Color focusedAnnotationColor;
-    private Color blurredAnnotationColor;
     private AnnotationCircleBean currentFocusedCircle;
     private AnnotationCircleBean currentPressedCircle;
     private ArrayList<Annotation> annotationList = new ArrayList<>();
     private JPanel panel;
     private Image image;
+    private SelectedAnnotation selectedAnnotation = new SelectedAnnotation(null);
+    private DrawMouseBehaviour dmb;
     private PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
     public MainPanelModel(JPanel panel) {
         this.panel = panel;
         annotationFont = new Font(Font.SANS_SERIF, Font.BOLD, 12);
         annotationFontColor = Color.BLACK;
-        blurredAnnotationStroke = new BasicStroke(1);
-        focusedAnnotationStroke = new BasicStroke(3);
-        blurredAnnotationColor = Color.LIGHT_GRAY;
-        focusedAnnotationColor = Color.RED;
-        draggingRectangle = false;
-        draggingCircle = false;
-        isOCREnabled = false;
+         isOCREnabled = false;
 
     }
 
@@ -113,13 +96,6 @@ public class MainPanelModel implements ListSelectionListener {
         return annotationList;
     }
 
-    public Rectangle getMouseBox(int x, int y) {
-        return new Rectangle(x - mouseBoxWidth / 2,
-                y - mouseboxHieght / 2,
-                mouseBoxWidth,
-                mouseboxHieght);
-    }
-
     /**
      * @return the annotationFont
      */
@@ -147,78 +123,6 @@ public class MainPanelModel implements ListSelectionListener {
         this.image = image;
     }
 
-    public Stroke getFocusedAnnotationStroke() {
-        return focusedAnnotationStroke;
-    }
-
-    public void setFocusedAnnotationStroke(Stroke focusedAnnotationStroke) {
-        this.focusedAnnotationStroke = focusedAnnotationStroke;
-    }
-
-    public Stroke getBlurredAnnotationStroke() {
-        return blurredAnnotationStroke;
-    }
-
-    public void setBlurredAnnotationStroke(Stroke unFocusedAnnotationStroke) {
-        this.blurredAnnotationStroke = unFocusedAnnotationStroke;
-    }
-
-    public Color getFocusedAnnotationColor() {
-        return focusedAnnotationColor;
-    }
-
-    public void setFocusedAnnotationColor(Color focusedAnnotationColor) {
-        this.focusedAnnotationColor = focusedAnnotationColor;
-    }
-
-    public Color getBlurredAnnotationColor() {
-        return blurredAnnotationColor;
-    }
-
-    public void setBlurredAnnotationColor(Color blurredAnnotationColor) {
-        this.blurredAnnotationColor = blurredAnnotationColor;
-    }
-
-    public int getxPos() {
-        return xPos;
-    }
-
-    public void setxPos(int xPos) {
-        this.xPos = xPos;
-    }
-
-    public int getyPos() {
-        return yPos;
-    }
-
-    public void setyPos(int yPos) {
-        this.yPos = yPos;
-    }
-
-    public boolean isDraggingRectangle() {
-        return draggingRectangle;
-    }
-
-    public void setDraggingRectangle(boolean draggingRectangle) {
-        this.draggingRectangle = draggingRectangle;
-    }
-
-    public int getDragWidth() {
-        return dragWidth;
-    }
-
-    public void setDragWidth(int dragWidth) {
-        this.dragWidth = dragWidth;
-    }
-
-    public int getDragHeight() {
-        return dragHeight;
-    }
-
-    public void setDragHeight(int dragHeight) {
-        this.dragHeight = dragHeight;
-    }
-
     public AnnotationRectangleBean getCurrentSelectedAnnotationRectangle() {
         return currentSelectedAnnotationRectangle;
     }
@@ -241,13 +145,17 @@ public class MainPanelModel implements ListSelectionListener {
         this.isOCREnabled = isOCREnabled;
     }
 
-    public boolean isDraggingCircle() {
-        return draggingCircle;
+   
+
+    public DrawMouseBehaviour getDmb() {
+        return dmb;
     }
 
-    public void setDraggingCircle(boolean draggingCircle) {
-        this.draggingCircle = draggingCircle;
+    public void setDmb(DrawMouseBehaviour dmb) {
+        this.dmb = dmb;
     }
+    
+    
 
     public void highlightAnnotation(Annotation annotation) {
         /**
@@ -269,7 +177,7 @@ public class MainPanelModel implements ListSelectionListener {
 
     @Override
     public void valueChanged(ListSelectionEvent e) {
-        if(!e.getValueIsAdjusting()){
+        if (!e.getValueIsAdjusting()) {
             Annotation a = annotationList.get(e.getFirstIndex());
             if (currentSelectedAnnotationRectangle == null
                     || !currentSelectedAnnotationRectangle.equals(a.getAnnotationRectangle())) {
@@ -277,7 +185,19 @@ public class MainPanelModel implements ListSelectionListener {
             }
             System.out.println("List selection changed");
         }
-        
+
+    }
+
+    public SelectedAnnotation getSelectedAnnotation() {
+        return selectedAnnotation;
+    }
+
+    public void setSelectedAnnotation(SelectedAnnotation selectedAnnotation) {
+        SelectedAnnotation old = this.selectedAnnotation;
+        this.selectedAnnotation = selectedAnnotation;
+        if (!old.equals(selectedAnnotation)) {
+            pcs.firePropertyChange(SET_SELECTED_ANNOTATION, old, selectedAnnotation);
+        }
     }
 
 }

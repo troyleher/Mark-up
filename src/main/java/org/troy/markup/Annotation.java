@@ -10,9 +10,7 @@ import org.troy.markup.beans.SystemConfigBean;
 import org.troy.markup.beans.AnnotationCircleBean;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -86,5 +84,25 @@ public class Annotation {
     public void removePropertyChangeListener(PropertyChangeListener listener) {
         this.pcs.removePropertyChangeListener(listener);
     }
+
+    @Override
+    public boolean equals(Object obj) {
+       boolean equals = false;
+       if(obj instanceof Annotation){
+           Annotation a = (Annotation)obj;
+           if(a.getAnnotationCircle().getSymbol().
+                   equals(this.annotationCircle.getSymbol())){
+               equals = true;
+           }
+       }
+       return equals;
+    }
+
+    @Override
+    public int hashCode() {
+        return 31 * this.annotationCircle.getSymbol().hashCode();
+    }
+    
+    
 
 }

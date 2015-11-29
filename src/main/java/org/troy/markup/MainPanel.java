@@ -5,7 +5,6 @@
  */
 package org.troy.markup;
 
-import org.troy.markup.beans.AnnotationRectangleBean;
 import org.troy.markup.beans.AnnotationCircleBean;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -18,7 +17,6 @@ import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.AttributedString;
-import java.util.Iterator;
 import javax.swing.JPanel;
 import org.troy.markup.beans.SystemConfigBean;
 
@@ -26,7 +24,7 @@ import org.troy.markup.beans.SystemConfigBean;
  *
  * @author Troy
  */
-public class MainPanel extends JPanel  implements PropertyChangeListener{
+public class MainPanel extends JPanel implements PropertyChangeListener {
 
     private MainPanelModel model;
     private SystemConfigBean config;
@@ -34,7 +32,7 @@ public class MainPanel extends JPanel  implements PropertyChangeListener{
     public MainPanel() {
         this.model = new MainPanelModel(this);
         this.config = SystemConfigBean.createSystemConfigBean();
-        
+
     }
 
     @Override
@@ -45,32 +43,24 @@ public class MainPanel extends JPanel  implements PropertyChangeListener{
         if (model.getImage() != null) {
             g.drawImage(model.getImage(), 0, 0, null);
         }
-        if (model.isDraggingRectangle() && !model.isDraggingCircle()) {
-            g2d.drawRect(model.getxPos(),
-                    model.getyPos(),
-                    model.getDragWidth(),
-                    model.getDragHeight());
-        }
-        Iterator<Annotation> annotationList = 
-                model.getAnnotationList().iterator();
-        while (annotationList.hasNext()) {
-            Annotation annotation = annotationList.next();
-            
-            AnnotationRectangleBean currentFocusedRectangle =
-                    model.getCurrentSelectedAnnotationRectangle();
-            if(currentFocusedRectangle == null || !currentFocusedRectangle.
-                    equals(annotation.getAnnotationRectangle())){
-                paintAnnotation(g2d,
-                        annotation,
-                        model.getBlurredAnnotationColor(),
-                        model.getBlurredAnnotationStroke());
 
+        for (Annotation a : model.getAnnotationList()) {
+            
+            if (a.equals(model.getSelectedAnnotation().getAnnotation())) {
+                paintAnnotation(g2d,
+                        a,
+                        config.getFocusedAnnotationColor(),
+                        config.getFocusedAnnotationStroke());
             } else {
                 paintAnnotation(g2d,
-                        annotation,
-                        model.getFocusedAnnotationColor(),
-                        model.getFocusedAnnotationStroke());
+                        a,
+                        config.getBlurredAnnotationColor(),
+                        config.getBlurredAnnotationStroke());
             }
+
+        }
+        if (model.getDmb() != null) {
+            model.getDmb().draw(g);
         }
     }
 
@@ -82,27 +72,25 @@ public class MainPanel extends JPanel  implements PropertyChangeListener{
         paintAnnotationLetter(g2d, annotation.getAnnotationCircle());
     }
 
-    
     @Override
     public Dimension getPreferredSize() {
-        if(model.getImage() != null){
+        if (model.getImage() != null) {
             return new Dimension(model.getImage().getWidth(null),
-                   model.getImage().getHeight(null));
+                    model.getImage().getHeight(null));
         }
         return null;
     }
 
-   
     //done
     private void paintAnnotationLetter(Graphics2D g2d, AnnotationCircleBean annotationCircle) {
         String letter = annotationCircle.getSymbol();
         AttributedString as = new AttributedString(letter);
-        if(letter.length() > 1){
+        if (letter.length() > 1) {
             as.addAttribute(TextAttribute.SUPERSCRIPT, TextAttribute.SUPERSCRIPT_SUPER, 1, letter.length());
         }
         as.addAttribute(TextAttribute.FONT, model.getAnnotationFont());
         as.addAttribute(TextAttribute.FOREGROUND, model.getAnnotationFontColor());
-        
+
         g2d.drawString(as.getIterator(), (int) annotationCircle.getX() + 6, (int) annotationCircle.getY() + 15);
     }
 
@@ -124,10 +112,9 @@ public class MainPanel extends JPanel  implements PropertyChangeListener{
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if(MainPanelModel.CURRENT_SELECTED_RECTANGLE.equalsIgnoreCase(evt.getPropertyName())){
+        if (MainPanelModel.CURRENT_SELECTED_RECTANGLE.equalsIgnoreCase(evt.getPropertyName())) {
             this.repaint();
         }
     }
-    
 
 }

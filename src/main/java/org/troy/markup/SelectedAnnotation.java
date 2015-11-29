@@ -10,10 +10,11 @@ package org.troy.markup;
  * @author Troy
  */
 public class SelectedAnnotation {
+
     private Annotation annotation;
     private boolean mousePressedOnCircle = false;
-    
-    public SelectedAnnotation(Annotation a){
+
+    public SelectedAnnotation(Annotation a) {
         annotation = a;
     }
 
@@ -32,5 +33,22 @@ public class SelectedAnnotation {
     public void setMousePressedOnCircle(boolean mousePressedOnCircle) {
         this.mousePressedOnCircle = mousePressedOnCircle;
     }
-    
+
+    @Override
+    public boolean equals(Object obj) {
+        boolean equals = false;
+        if ((obj instanceof SelectedAnnotation)) {
+            SelectedAnnotation sa = (SelectedAnnotation)obj;
+            if(sa.getAnnotation().equals(this.annotation)){
+                equals = true;
+            }
+        }
+        return equals;
+    }
+
+    @Override
+    public int hashCode() {
+        return 31 * annotation.hashCode();
+    }
+
 }

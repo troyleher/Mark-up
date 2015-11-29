@@ -10,7 +10,6 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Iterator;
 import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
 import javax.swing.table.TableModel;
 import org.troy.markup.beans.AnnotationRectangleBean;
 
@@ -27,7 +26,7 @@ public class AnnotationTable extends JTable implements PropertyChangeListener{
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-       if(MainPanelModel.CURRENT_SELECTED_RECTANGLE.equalsIgnoreCase(evt.getPropertyName())){
+       if(MainPanelModel.SET_SELECTED_ANNOTATION.equalsIgnoreCase(evt.getPropertyName())){
             setRowSelectionInterval(0,
                     getAnnotationIndex((AnnotationRectangleBean)evt.getNewValue()));
         }

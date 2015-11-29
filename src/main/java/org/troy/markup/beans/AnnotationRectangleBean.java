@@ -75,6 +75,12 @@ public class AnnotationRectangleBean {
     public int hashCode() {
         return super.hashCode(); 
     }
+
+    @Override
+    public String toString() {
+        return "Rectangle x=" + x + " y=" + y + " width=" + width + " height=" + height;
+    }
+    
     
 
    

@@ -11,6 +11,7 @@ import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
+import org.troy.markup.beans.SystemConfigBean;
 
 /**
  *
@@ -18,14 +19,14 @@ import java.awt.geom.Rectangle2D;
  */
 public class Utilities {
 
-    private static int mouseBoxWidth = 10;
-    private static int mouseBoxHieght = 10;
+    
 
     public static Rectangle getMouseBox(MouseEvent e) {
-        Rectangle box = new Rectangle(e.getX() - mouseBoxWidth / 2,
-                e.getY() - mouseBoxHieght / 2,
-                mouseBoxWidth,
-                mouseBoxHieght);
+        SystemConfigBean config = SystemConfigBean.createSystemConfigBean();
+        Rectangle box = new Rectangle(e.getX() - config.getMouseBoxWidth() / 2,
+                e.getY() - config.getMouseBoxHeight()/ 2,
+                config.getMouseBoxWidth(),
+                config.getMouseBoxHeight());
         return box;
     }
     public static Ellipse2D.Double createCircle(AnnotationCircleBean bean){
