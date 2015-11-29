@@ -5,12 +5,17 @@
  */
 package org.troy.markup;
 
+import java.awt.Component;
+import java.awt.Graphics2D;
 import org.troy.markup.beans.AnnotationRectangleBean;
 import org.troy.markup.beans.AnnotationCircleBean;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
+import javax.swing.JDialog;
+import javax.swing.SwingUtilities;
 import org.troy.markup.beans.SystemConfigBean;
 
 /**
@@ -19,21 +24,32 @@ import org.troy.markup.beans.SystemConfigBean;
  */
 public class Utilities {
 
-    
-
     public static Rectangle getMouseBox(MouseEvent e) {
         SystemConfigBean config = SystemConfigBean.createSystemConfigBean();
         Rectangle box = new Rectangle(e.getX() - config.getMouseBoxWidth() / 2,
-                e.getY() - config.getMouseBoxHeight()/ 2,
+                e.getY() - config.getMouseBoxHeight() / 2,
                 config.getMouseBoxWidth(),
                 config.getMouseBoxHeight());
         return box;
     }
-    public static Ellipse2D.Double createCircle(AnnotationCircleBean bean){
+
+    public static Ellipse2D.Double createCircle(AnnotationCircleBean bean) {
         return new Ellipse2D.Double(bean.getX(), bean.getY(), bean.getWidth(), bean.getHeight());
     }
-    public static Rectangle2D.Double createRectangle(AnnotationRectangleBean bean){
+
+    public static Rectangle2D.Double createRectangle(AnnotationRectangleBean bean) {
         return new Rectangle2D.Double(bean.getX(), bean.getY(), bean.getWidth(), bean.getHeight());
+    }
+
+    public static JDialog createEditingDialog(Graphics2D g2d, Annotation a, Component c) {
+        AnnotationEditingPanel editingPanel = new AnnotationEditingPanel(a);
+        JDialog dialog = new JDialog(SwingUtilities.getWindowAncestor(c));
+        dialog.add(editingPanel);
+        dialog.setLocation((int) (a.getAnnotationRectangle().getX() + a.getAnnotationRectangle().getWidth()),
+                (int) (a.getAnnotationRectangle().getY() + a.getAnnotationRectangle().getHeight()));
+        dialog.setSize(500, 150);
+        dialog.setModal(true);
+        return dialog;
     }
 
 }

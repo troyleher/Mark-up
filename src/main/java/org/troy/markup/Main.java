@@ -6,16 +6,12 @@
 package org.troy.markup;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.ScrollPane;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
@@ -57,6 +53,9 @@ public class Main {
             AnnotationTableModel tableModel
                     = new AnnotationTableModel(mainPanel.getModel().getAnnotationList());
             AnnotationTable table = new AnnotationTable(tableModel);
+            AnnotationTableMouseAdaptor atma =
+                    new AnnotationTableMouseAdaptor(table, mainPanel);
+            table.addMouseListener(atma);
             table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
             JScrollPane scrollTablePane = new JScrollPane(table);
             mainPanel.getModel().addPropertyChangeListener(tableModel);

@@ -6,10 +6,11 @@
 package org.troy.markup;
 
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import javax.swing.JDialog;
+import javax.swing.SwingUtilities;
 import org.troy.markup.beans.AnnotationCircleBean;
 import org.troy.markup.beans.AnnotationRectangleBean;
 import org.troy.markup.view.DrawDraggingRectangle;
@@ -43,7 +44,7 @@ public class AnnotationMouseAdapter extends MouseAdapter {
         for (Annotation a : model.getAnnotationList()) {
             AnnotationCircleBean circle = a.getAnnotationCircle();
             AnnotationRectangleBean rect = a.getAnnotationRectangle();
-            
+
             if (g2d.hit(Utilities.getMouseBox(e),
                     Utilities.createCircle(circle),
                     false)) {
@@ -62,7 +63,7 @@ public class AnnotationMouseAdapter extends MouseAdapter {
                 match = true;
 
                 //Else no element of annotation selected
-            } else if(!match) {
+            } else if (!match) {
                 sa.setAnnotation(null);
                 sa.setMousePressedOnCircle(false);
 
@@ -115,6 +116,25 @@ public class AnnotationMouseAdapter extends MouseAdapter {
         }
         e.getComponent().repaint();
 
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        if (e.getClickCount() == 2) {
+            Graphics2D g2d = (Graphics2D) e.getComponent().getGraphics();
+            e.consume();
+            //If annotation circle is double clicked show editing dialog
+            ArrayList<Annotation> aList = model.getAnnotationList();
+            for (final Annotation a : aList) {
+                if (g2d.hit(Utilities.getMouseBox(e),
+                        Utilities.createCircle(a.getAnnotationCircle()),
+                        false)) {
+                    JDialog d = Utilities.createEditingDialog(g2d, a, e.getComponent());
+                    d.setVisible(true);
+                }
+            }
+
+        }
     }
 
     private void resetVariables() {
