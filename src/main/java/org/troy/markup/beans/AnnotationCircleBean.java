@@ -17,7 +17,14 @@ public class AnnotationCircleBean {
     private String symbol;
     
     
-    public AnnotationCircleBean(){}
+    private AnnotationCircleBean(){}
+    public AnnotationCircleBean(AnnotationCircleBean circleBean){
+        this.x = circleBean.x;
+        this.y = circleBean.y;
+        this.width = circleBean.width;
+        this.height = circleBean.height;
+        this.symbol = circleBean.symbol;
+    }
     public AnnotationCircleBean(double x,
             double y, double width, double height, String symbol){
         this.x = x;

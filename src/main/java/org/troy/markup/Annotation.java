@@ -18,6 +18,8 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement
 public class Annotation {
+    
+    //TODO Create common interface for circle and rectangle
 
     private AnnotationRectangleBean annotationRectangle;
     private AnnotationCircleBean annotationCircle;
@@ -27,7 +29,11 @@ public class Annotation {
 
     private PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
-    public Annotation() {
+    /**
+     * Used only by JAXB, to marshal data to a persistant storage. Do not use 
+     * this constructor to create an annotation
+     */
+    private Annotation() {
     }
 
     public Annotation(double x, double y, double width, double height) {
@@ -41,6 +47,12 @@ public class Annotation {
                 configBean.getCircleHeight(),
                 AnnotationLetterFactory.createLetter());
         details = configBean.getDetails();
+    }
+    public Annotation(Annotation a){
+        configBean = SystemConfigBean.createSystemConfigBean();
+        this.annotationCircle = new AnnotationCircleBean(a.getAnnotationCircle());
+        this.annotationRectangle = new AnnotationRectangleBean(a.annotationRectangle);
+    
     }
 
     public String getDetails() {

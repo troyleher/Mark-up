@@ -16,7 +16,13 @@ public class AnnotationRectangleBean {
     private double height;
     
     
-    public AnnotationRectangleBean(){}
+    private AnnotationRectangleBean(){}
+    public AnnotationRectangleBean(AnnotationRectangleBean rectBean){
+        this.x = rectBean.x;
+        this.y = rectBean.y;
+        this.width = rectBean.width;
+        this.height = rectBean.height;
+    }
     public AnnotationRectangleBean(double x, double y, double width, double height){
         this.x = x;
         this.y = y;

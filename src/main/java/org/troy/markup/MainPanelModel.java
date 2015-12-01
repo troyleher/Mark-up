@@ -10,13 +10,11 @@ import org.troy.markup.beans.AnnotationCircleBean;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Image;
-import java.awt.Rectangle;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import javax.swing.JPanel;
 import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import org.troy.markup.view.DrawMouseBehaviour;
@@ -31,7 +29,8 @@ public class MainPanelModel implements ListSelectionListener {
     public static int MIN_RECTANGLE_HEIGHT = 10;
     public static String ADD_ANNOTATION_TO_LIST = "addAnnotationToList";
     public static String CURRENT_SELECTED_RECTANGLE = "setCurrentSelectedAnnotationRectangle";
-    public static String SET_SELECTED_ANNOTATION = "setSelectedAnnotation";
+    public static String SELECTED_ANNOTATION_CHANGED = "setSelectedAnnotation";
+    public static String ANNOTATION_LIST_CHANGED = "annotationListChanged";
 
     private AnnotationRectangleBean currentSelectedAnnotationRectangle;
     private boolean isOCREnabled;
@@ -46,6 +45,7 @@ public class MainPanelModel implements ListSelectionListener {
     private DrawMouseBehaviour dmb;
     private JTable table;
     private PropertyChangeSupport pcs = new PropertyChangeSupport(this);
+    
 
     public MainPanelModel(JPanel panel) {
         this.panel = panel;
@@ -98,6 +98,14 @@ public class MainPanelModel implements ListSelectionListener {
     public ArrayList<Annotation> getAnnotationList() {
         return annotationList;
     }
+
+    public void setAnnotationList(ArrayList<Annotation> annotationList) {
+        ArrayList<Annotation> oldList = this.annotationList;
+        this.annotationList = annotationList;
+        System.out.println("MainPanelModel setAnnotationList");
+        pcs.firePropertyChange(ANNOTATION_LIST_CHANGED, oldList, annotationList);
+    }
+    
 
     /**
      * @return the annotationFont
@@ -198,7 +206,7 @@ public class MainPanelModel implements ListSelectionListener {
         SelectedAnnotation old = this.selectedAnnotation;
         this.selectedAnnotation = selectedAnnotation;
         if (!old.equals(selectedAnnotation)) {
-            pcs.firePropertyChange(SET_SELECTED_ANNOTATION, old, selectedAnnotation);
+            pcs.firePropertyChange(SELECTED_ANNOTATION_CHANGED, old, selectedAnnotation);
         }
     }
 

@@ -22,9 +22,11 @@ public class AnnotationTableModel extends AbstractTableModel implements Property
     public AnnotationTableModel(ArrayList<Annotation> list) {
         this.annotationList = list;
         
-        Iterator<Annotation> i = annotationList.iterator();
-        while(i.hasNext()){
-            Annotation a = i.next();
+        setPropertyChangeListenerForAnnotation();
+    }
+
+    private void setPropertyChangeListenerForAnnotation() {
+       for(Annotation a : annotationList){
             a.addPropertyChangeListener(this);
         }
     }
@@ -60,11 +62,17 @@ public class AnnotationTableModel extends AbstractTableModel implements Property
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
+        System.out.println("Property change event table model");
         if(MainPanelModel.ADD_ANNOTATION_TO_LIST.equalsIgnoreCase(evt.getPropertyName())){
             if(evt.getNewValue() instanceof Annotation){
                 ((Annotation)evt.getNewValue()).addPropertyChangeListener(this);
             }
-        }
+        }else
+            if(MainPanelModel.ANNOTATION_LIST_CHANGED.equalsIgnoreCase(evt.getPropertyName())){
+                this.annotationList = (ArrayList<Annotation>)evt.getNewValue();
+                setPropertyChangeListenerForAnnotation();
+                System.out.println("Table property change");
+            }
         fireTableDataChanged();
     }
 
