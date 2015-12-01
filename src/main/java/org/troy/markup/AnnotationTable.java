@@ -33,6 +33,7 @@ public class AnnotationTable extends JTable implements PropertyChangeListener {
             setRowSelectionInterval(0,
                     getAnnotationIndex((Annotation) evt.getNewValue()));
         }
+        
     }
 
     private int getAnnotationIndex(Annotation selectedAnnotation) {

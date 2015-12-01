@@ -6,10 +6,14 @@
 package org.troy.markup;
 
 import java.awt.Graphics2D;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JDialog;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -27,14 +31,31 @@ public class AnnotationTableMouseAdaptor extends MouseAdapter {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        if (e.getClickCount() == 2) {
+        if (e.getClickCount() == 2 && SwingUtilities.isLeftMouseButton(e)) {
             e.consume();
             int index = table.getSelectedRow();
             Annotation a = mainPanel.getModel().getAnnotationList().get(index);
             JDialog d = Utilities.createEditingDialog((Graphics2D)mainPanel.getGraphics(), a, mainPanel);
             d.setVisible(true);
         }
+        displayContextMenu(e);
 
+    }
+
+    private void displayContextMenu(MouseEvent e) {
+        
+        if(SwingUtilities.isRightMouseButton(e)){
+            //Change selected row to mouse clicked point
+            int row = table.rowAtPoint(e.getPoint());
+            table.getSelectionModel().setSelectionInterval(row, row);
+            
+            DeleteAction deleteAction = new DeleteAction("Delete",
+                    null, "Remove annotation", new Integer(KeyEvent.VK_D ), row);
+            deleteAction.setModel(mainPanel.getModel());
+            JPopupMenu popUp = new JPopupMenu("Edit");
+            popUp.add(deleteAction);
+            popUp.show(e.getComponent(), e.getX(), e.getY());
+        }
     }
 
 }

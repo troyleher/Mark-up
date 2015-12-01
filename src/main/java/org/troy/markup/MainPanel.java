@@ -26,7 +26,7 @@ import org.troy.markup.beans.SystemConfigBean;
  */
 public class MainPanel extends JPanel implements PropertyChangeListener {
 
-    private MainPanelModel model;
+    private final MainPanelModel model;
     private SystemConfigBean config;
 
     public MainPanel() {
@@ -104,10 +104,6 @@ public class MainPanel extends JPanel implements PropertyChangeListener {
 
     public MainPanelModel getModel() {
         return model;
-    }
-
-    public void setModel(MainPanelModel model) {
-        this.model = model;
     }
 
     @Override

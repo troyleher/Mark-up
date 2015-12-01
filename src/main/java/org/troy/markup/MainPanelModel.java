@@ -45,7 +45,6 @@ public class MainPanelModel implements ListSelectionListener {
     private DrawMouseBehaviour dmb;
     private JTable table;
     private PropertyChangeSupport pcs = new PropertyChangeSupport(this);
-    
 
     public MainPanelModel(JPanel panel) {
         this.panel = panel;
@@ -91,7 +90,9 @@ public class MainPanelModel implements ListSelectionListener {
     }
 
     public void addAnnotationToList(Annotation annotation) {
-        this.annotationList.add(annotation);
+        if (annotation != null) {
+            this.annotationList.add(annotation);
+        }
         pcs.firePropertyChange(ADD_ANNOTATION_TO_LIST, null, annotation);
     }
 
@@ -102,10 +103,11 @@ public class MainPanelModel implements ListSelectionListener {
     public void setAnnotationList(ArrayList<Annotation> annotationList) {
         ArrayList<Annotation> oldList = this.annotationList;
         this.annotationList = annotationList;
-        System.out.println("MainPanelModel setAnnotationList");
+        //System.out.println("MainPanelModel setAnnotationList");
+        // System.out.println(pcs.getPropertyChangeListeners().length + " No of property change listners");
+
         pcs.firePropertyChange(ANNOTATION_LIST_CHANGED, oldList, annotationList);
     }
-    
 
     /**
      * @return the annotationFont
@@ -189,7 +191,7 @@ public class MainPanelModel implements ListSelectionListener {
             int itemIndex = table.getSelectedRow();
             if (itemIndex >= 0) {
                 Annotation a = annotationList.get(itemIndex);
-                if ( !currentAnnotation.equals(a)) {
+                if (!currentAnnotation.equals(a)) {
                     selectedAnnotation.setAnnotation(a);
                 }
             }
