@@ -52,6 +52,7 @@ public class Annotation {
         configBean = SystemConfigBean.createSystemConfigBean();
         this.annotationCircle = new AnnotationCircleBean(a.getAnnotationCircle());
         this.annotationRectangle = new AnnotationRectangleBean(a.annotationRectangle);
+        this.details = a.getDetails();
     
     }
 

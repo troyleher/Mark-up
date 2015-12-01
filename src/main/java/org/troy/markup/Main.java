@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
-import javax.swing.Action;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -48,9 +47,11 @@ public class Main {
         try {
             BufferedImage image = ImageIO.read(getClass().getResourceAsStream("/images/test3.png"));
             mainPanel = new MainPanel();
+            MainPanelModel model = mainPanel.getModel();
             mainPanel.setImage(image);
 
-            AnnotationMouseAdapter ama = new AnnotationMouseAdapter(mainPanel.getModel());
+            AnnotationMouseAdapter ama = new AnnotationMouseAdapter(model);
+            model.addPropertyChangeListener(mainPanel);
 
             mainPanel.addMouseListener(ama);
             mainPanel.addMouseMotionListener(ama);
@@ -66,9 +67,14 @@ public class Main {
             JMenu editMenu = new JMenu("Edit");
             UndoAction undoAction = new UndoAction("Undo", null,
                     "Undo last command", new Integer(KeyEvent.VK_Z) );
-            undoAction.setMainPanelModel(mainPanel.getModel());
+            RedoAction redoAction = new RedoAction("Redo", null,
+                    "Redo last command", new Integer(KeyEvent.VK_R));
+            redoAction.setModel(model);
+            undoAction.setMainPanelModel(model);
             JMenuItem undoItem = new JMenuItem(undoAction);
+            JMenuItem redoItem = new JMenuItem(redoAction);
             editMenu.add(undoItem);
+            editMenu.add(redoItem);
             menuBar.add(editMenu);
             frame.setJMenuBar(menuBar);
             
@@ -84,6 +90,7 @@ public class Main {
     }
 
     private JScrollPane setUpTable(MainPanel mainPanel) {
+        MainPanelModel model = mainPanel.getModel();
         AnnotationTableModel tableModel
                 = new AnnotationTableModel(mainPanel.getModel().getAnnotationList());
         AnnotationTable table = new AnnotationTable(tableModel);
@@ -92,11 +99,11 @@ public class Main {
         table.addMouseListener(atma);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         JScrollPane scrollTablePane = new JScrollPane(table);
-        mainPanel.getModel().addPropertyChangeListener(tableModel);
-        mainPanel.getModel().setTable(table);
-        mainPanel.getModel().getSelectedAnnotation().addPropertyChangeListener(table);
-        mainPanel.getModel().getSelectedAnnotation().addPropertyChangeListener(mainPanel);
-        table.getSelectionModel().addListSelectionListener(mainPanel.getModel());
+        model.addPropertyChangeListener(tableModel);
+        model.setTable(table);
+        model.getSelectedAnnotation().addPropertyChangeListener(table);
+        model.getSelectedAnnotation().addPropertyChangeListener(mainPanel);
+        table.getSelectionModel().addListSelectionListener(model);
         return scrollTablePane;
     }
 

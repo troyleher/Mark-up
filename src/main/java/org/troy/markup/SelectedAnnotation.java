@@ -17,7 +17,7 @@ public class SelectedAnnotation {
     private Annotation annotation;
     private boolean mousePressedOnCircle = false;
     private PropertyChangeSupport pcs = new PropertyChangeSupport(this);
-    public static String setAnnotation = "setAnnotation";
+    public static String SET_ANNOTATION = "setAnnotation";
 
     public SelectedAnnotation(Annotation a) {
         annotation = a;
@@ -30,7 +30,7 @@ public class SelectedAnnotation {
     public void setAnnotation(Annotation annotation) {
         Annotation old = this.annotation;
         this.annotation = annotation;
-        pcs.firePropertyChange(setAnnotation, old, annotation);
+        pcs.firePropertyChange(SET_ANNOTATION, old, annotation);
     }
 
     public boolean isMousePressedOnCircle() {

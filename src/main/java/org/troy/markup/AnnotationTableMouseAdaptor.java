@@ -8,10 +8,8 @@ package org.troy.markup;
 import java.awt.Graphics2D;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
 import javax.swing.JDialog;
 import javax.swing.JTable;
-import javax.swing.SwingUtilities;
 
 /**
  *

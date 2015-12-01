@@ -112,7 +112,10 @@ public class MainPanel extends JPanel implements PropertyChangeListener {
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if (SelectedAnnotation.setAnnotation.equalsIgnoreCase(evt.getPropertyName())) {
+        if (SelectedAnnotation.SET_ANNOTATION.equalsIgnoreCase(evt.getPropertyName())) {
+            this.repaint();
+        }
+        if(MainPanelModel.ANNOTATION_LIST_CHANGED.equalsIgnoreCase(evt.getPropertyName())){
             this.repaint();
         }
     }

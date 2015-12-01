@@ -40,7 +40,7 @@ public class AnnotationMementoMediator {
         annotationCareTaker.addMemento(annotationOriginator.saveStateToMemento());
         saveIndex++;
         currentIndex++;
-        System.out.println("save annotation memento :currentIndex=" + currentIndex + " :saveIndex=" + saveIndex);
+        //System.out.println("save annotation memento :currentIndex=" + currentIndex + " :saveIndex=" + saveIndex);
     }
 
     /**
@@ -52,7 +52,7 @@ public class AnnotationMementoMediator {
         ArrayList<Annotation> aList = null;
         if (currentIndex >= 1) {
             --currentIndex;
-            System.out.println("undo annotation memento :currentIndex=" + currentIndex + " :saveIndex=" + saveIndex);
+            //System.out.println("undo annotation memento :currentIndex=" + currentIndex + " :saveIndex=" + saveIndex);
             if (currentIndex > 0) {
                 aList = annotationOriginator.
                         restoreFromMemento(annotationCareTaker.getMemento(currentIndex - 1));
@@ -69,12 +69,13 @@ public class AnnotationMementoMediator {
      */
     public ArrayList<Annotation> redo() {
         ArrayList<Annotation> aList = null;
+        System.out.println("Redo currentIndex=" + currentIndex + " saveIndex=" + saveIndex);
         if (currentIndex < saveIndex) {
+            ++currentIndex;
             aList = annotationOriginator.
-                    restoreFromMemento(annotationCareTaker.getMemento(++currentIndex));
+                    restoreFromMemento(annotationCareTaker.getMemento(currentIndex-1));
         } else {
-
-            aList = annotationOriginator.restoreFromMemento(annotationCareTaker.getMemento(currentIndex));
+            aList = annotationOriginator.restoreFromMemento(annotationCareTaker.getMemento(currentIndex-1));
         }
         return aList;
     }

@@ -29,7 +29,7 @@ public class AnnotationTable extends JTable implements PropertyChangeListener {
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if (SelectedAnnotation.setAnnotation.equalsIgnoreCase(evt.getPropertyName())) {
+        if (SelectedAnnotation.SET_ANNOTATION.equalsIgnoreCase(evt.getPropertyName())) {
             setRowSelectionInterval(0,
                     getAnnotationIndex((Annotation) evt.getNewValue()));
         }

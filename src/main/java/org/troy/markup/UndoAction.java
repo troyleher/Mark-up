@@ -31,7 +31,7 @@ public class UndoAction extends AbstractAction {
             ArrayList<Annotation> aList = AnnotationMementoMediator.getInstance().undo();
             if (aList != null) {
                 mainPanelModel.setAnnotationList(aList);
-                System.out.println("Undo command clicked");
+                //System.out.println("Undo command clicked");
             }
 
         }
