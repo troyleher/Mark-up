@@ -114,6 +114,7 @@ public class MainPanel extends JPanel implements PropertyChangeListener {
         if(MainPanelModel.ANNOTATION_LIST_CHANGED.equalsIgnoreCase(evt.getPropertyName())){
             this.repaint();
         }
+        this.repaint();
     }
 
    
