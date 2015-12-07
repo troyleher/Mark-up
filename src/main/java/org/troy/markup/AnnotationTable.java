@@ -8,12 +8,9 @@ package org.troy.markup;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.List;
 import javax.swing.JTable;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableModel;
-import org.troy.markup.beans.AnnotationRectangleBean;
 
 /**
  *
@@ -39,7 +36,7 @@ public class AnnotationTable extends JTable implements PropertyChangeListener {
     private int getAnnotationIndex(Annotation selectedAnnotation) {
         int index = 0;
         if (selectedAnnotation != null) {
-            ArrayList<Annotation> annotationList
+            List<Annotation> annotationList
                     = ((AnnotationTableModel) this.getModel()).getAnnotationList();
             for (Annotation a : annotationList) {
                 if (a.equals(selectedAnnotation)) {

@@ -13,6 +13,7 @@ import java.awt.Image;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.event.ListSelectionEvent;
@@ -38,7 +39,7 @@ public class MainPanelModel implements ListSelectionListener {
     private Color annotationFontColor;
     private AnnotationCircleBean currentFocusedCircle;
     private AnnotationCircleBean currentPressedCircle;
-    private ArrayList<Annotation> annotationList = new ArrayList<>();
+    private List<Annotation> annotationList = new ArrayList<>();
     private JPanel panel;
     private Image image;
     private SelectedAnnotation selectedAnnotation = new SelectedAnnotation(null);
@@ -96,12 +97,12 @@ public class MainPanelModel implements ListSelectionListener {
         pcs.firePropertyChange(ADD_ANNOTATION_TO_LIST, null, annotation);
     }
 
-    public ArrayList<Annotation> getAnnotationList() {
+    public List<Annotation> getAnnotationList() {
         return annotationList;
     }
 
-    public void setAnnotationList(ArrayList<Annotation> annotationList) {
-        ArrayList<Annotation> oldList = this.annotationList;
+    public void setAnnotationList(List<Annotation> annotationList) {
+        List<Annotation> oldList = this.annotationList;
         this.annotationList = annotationList;
         //System.out.println("MainPanelModel setAnnotationList");
         // System.out.println(pcs.getPropertyChangeListeners().length + " No of property change listners");

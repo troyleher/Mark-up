@@ -14,6 +14,7 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JDialog;
 import javax.swing.SwingUtilities;
 import org.troy.markup.beans.SystemConfigBean;
@@ -50,6 +51,17 @@ public class Utilities {
         dialog.setSize(500, 150);
         dialog.setModal(true);
         return dialog;
+    }
+
+    public static List<Annotation> reLetter(List<Annotation> annotList) {
+        List<Annotation> modifiedList = new ArrayList<>(annotList.size());
+        AnnotationLetterFactory.setCurrentLetter(AnnotationLetterFactory.RESET);
+        for (Annotation a : annotList) {
+            Annotation newA  = new Annotation(a);
+            newA.getAnnotationCircle().setSymbol(AnnotationLetterFactory.createLetter());
+            modifiedList.add(newA);
+        }
+        return modifiedList;
     }
 
 }

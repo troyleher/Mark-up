@@ -10,6 +10,7 @@ import org.troy.markup.beans.SystemConfigBean;
 import org.troy.markup.beans.AnnotationCircleBean;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.Collections;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -34,6 +35,7 @@ public class Annotation {
      * this constructor to create an annotation
      */
     private Annotation() {
+        
     }
 
     public Annotation(double x, double y, double width, double height) {

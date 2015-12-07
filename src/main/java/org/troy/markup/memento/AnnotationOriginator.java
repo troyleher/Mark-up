@@ -6,6 +6,7 @@
 package org.troy.markup.memento;
 
 import java.util.ArrayList;
+import java.util.List;
 import org.troy.markup.Annotation;
 
 /**
@@ -13,9 +14,9 @@ import org.troy.markup.Annotation;
  * @author Troy
  */
 public class AnnotationOriginator {
-    private ArrayList<Annotation> annotationList;
+    private List<Annotation> annotationList;
     
-    public void setState(ArrayList<Annotation> annotationList){
+    public void setState(List<Annotation> annotationList){
         this.annotationList = annotationList;
     }
     
@@ -24,6 +25,7 @@ public class AnnotationOriginator {
    }
 
    public ArrayList<Annotation> restoreFromMemento(AnnotationMemento memento){
+       annotationList = memento.getState();
       return memento.getState();
    }
 }

@@ -9,6 +9,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
 /**
@@ -17,9 +18,9 @@ import javax.swing.table.AbstractTableModel;
  */
 public class AnnotationTableModel extends AbstractTableModel implements PropertyChangeListener{
 
-    private ArrayList<Annotation> annotationList;
+    private List<Annotation> annotationList;
 
-    public AnnotationTableModel(ArrayList<Annotation> list) {
+    public AnnotationTableModel(List<Annotation> list) {
         this.annotationList = list;
         
         setPropertyChangeListenerForAnnotation();
@@ -76,7 +77,7 @@ public class AnnotationTableModel extends AbstractTableModel implements Property
         fireTableDataChanged();
     }
 
-    public ArrayList<Annotation> getAnnotationList() {
+    public List<Annotation> getAnnotationList() {
         return annotationList;
     }
     

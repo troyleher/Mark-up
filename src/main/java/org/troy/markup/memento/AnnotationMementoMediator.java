@@ -6,6 +6,7 @@
 package org.troy.markup.memento;
 
 import java.util.ArrayList;
+import java.util.List;
 import org.troy.markup.Annotation;
 
 /**
@@ -14,16 +15,15 @@ import org.troy.markup.Annotation;
  */
 public class AnnotationMementoMediator {
 
-    private int saveIndex = 0;
-    private int currentIndex = 0;
+    private int saveIndex = -1;
+    private int currentIndex = -1;
 
     private final AnnotationOriginator annotationOriginator;
     private final AnnotationCareTaker annotationCareTaker;
     private static AnnotationMementoMediator amm;
 
     private AnnotationMementoMediator() {
-        saveIndex = 0;
-        currentIndex = 0;
+
         annotationOriginator = new AnnotationOriginator();
         annotationCareTaker = new AnnotationCareTaker();
     }
@@ -35,12 +35,20 @@ public class AnnotationMementoMediator {
         return amm;
     }
 
-    public void save(ArrayList<Annotation> annotList) {
+    public void save(List<Annotation> annotList) {
+
+        if (currentIndex < saveIndex && currentIndex >=0) {
+            annotationCareTaker.removeFromMemento(currentIndex + 1);
+            saveIndex = currentIndex;
+        } 
+            saveIndex++;
+            currentIndex++;
+
+     
         annotationOriginator.setState(annotList);
         annotationCareTaker.addMemento(annotationOriginator.saveStateToMemento());
-        saveIndex++;
-        currentIndex++;
-        //System.out.println("save annotation memento :currentIndex=" + currentIndex + " :saveIndex=" + saveIndex);
+
+        System.out.println("save annotation memento :currentIndex=" + currentIndex + " :saveIndex=" + saveIndex);
     }
 
     /**
@@ -52,13 +60,12 @@ public class AnnotationMementoMediator {
         ArrayList<Annotation> aList = null;
         if (currentIndex >= 1) {
             --currentIndex;
-            //System.out.println("undo annotation memento :currentIndex=" + currentIndex + " :saveIndex=" + saveIndex);
-            if (currentIndex > 0) {
-                aList = annotationOriginator.
-                        restoreFromMemento(annotationCareTaker.getMemento(currentIndex - 1));
-            }else{
-                aList = new  ArrayList<>();
-            }
+            System.out.println("undo annotation memento :currentIndex=" + currentIndex + " :saveIndex=" + saveIndex);
+            aList = annotationOriginator.
+                    restoreFromMemento(annotationCareTaker.getMemento(currentIndex));
+
+        } else {
+            aList = new ArrayList<>();
         }
         return aList;
     }
@@ -70,12 +77,10 @@ public class AnnotationMementoMediator {
     public ArrayList<Annotation> redo() {
         ArrayList<Annotation> aList = null;
         System.out.println("Redo currentIndex=" + currentIndex + " saveIndex=" + saveIndex);
-        if (currentIndex < saveIndex) {
-            ++currentIndex;
+        if (currentIndex < saveIndex && currentIndex >= 0) {
             aList = annotationOriginator.
-                    restoreFromMemento(annotationCareTaker.getMemento(currentIndex-1));
-        } else {
-            aList = annotationOriginator.restoreFromMemento(annotationCareTaker.getMemento(currentIndex-1));
+                    restoreFromMemento(annotationCareTaker.getMemento(++currentIndex));
+
         }
         return aList;
     }

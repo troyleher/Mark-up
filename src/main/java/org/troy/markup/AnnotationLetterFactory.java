@@ -13,40 +13,41 @@ import java.util.ArrayList;
  */
 public class AnnotationLetterFactory {
 
-    private static ArrayList<Integer> letterList;
-    private static ArrayList<Integer> letterListPostFix;
+    private static int index = -1;
+    private final static int a = 65;
+    private final static int numLettersInAlphebet = 26;
+    public static char RESET = (char) -1;
 
     private AnnotationLetterFactory() {
 
     }
 
     public static String createLetter() {
-        StringBuilder returnLetter = new StringBuilder();
-
-        if (letterList == null) {
-            letterList = new ArrayList<>();
-            letterList.add(65);
-        }
-        int letter = letterList.get(letterList.size() - 1);
-        returnLetter.append(Character.toString((char) letter) );
-
-        //if not Z increment ascii alphebet list
-        if (!returnLetter.toString().equalsIgnoreCase("Z")) {
-            letterList.add(letter + 1);
+        String l;
+        index++;
+        //If index < Z
+        if (index < numLettersInAlphebet) {
+            l = Character.toString((char) (index + a));
         } else {
-            appendPostfixInteger(returnLetter);
+            l = "Z" + ((index + 1) - numLettersInAlphebet);
         }
-        return returnLetter.toString();
+
+        return l;
     }
 
-    private static void appendPostfixInteger(StringBuilder returnLetter) {
-        if (letterListPostFix == null) {
-            letterListPostFix = new ArrayList<>();
-            letterListPostFix.add(1);
+    public static void setCurrentLetter(char letter) {
+        //Capitilize letter
+        if (letter == (char)-1) {
+            index = -1;
         } else {
-            int postfix = letterListPostFix.get(letterListPostFix.size() - 1);
-            returnLetter = returnLetter.append( Integer.toString(postfix) );
-            letterListPostFix.add(postfix + 1);
+            String l = Character.toString(letter).toUpperCase();
+            index = l.charAt(0) - a;
         }
     }
+
+    public static void setCurrentZPostfixNumber(int num) {
+        index = (numLettersInAlphebet - 1) + num;
+
+    }
+
 }

@@ -6,6 +6,7 @@
 package org.troy.markup.memento;
 
 import java.util.ArrayList;
+import java.util.List;
 import org.troy.markup.Annotation;
 
 /**
@@ -15,7 +16,7 @@ import org.troy.markup.Annotation;
 public class AnnotationMemento {
     private final ArrayList<Annotation> annotationList;
     
-    public AnnotationMemento(ArrayList<Annotation> annotationList){
+    public AnnotationMemento(List<Annotation> annotationList){
         //create a deep copy of annotationList
         this.annotationList = new  ArrayList<>(annotationList.size());
         for(Annotation a : annotationList){

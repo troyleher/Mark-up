@@ -9,6 +9,7 @@ import java.awt.Graphics2D;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JDialog;
 import org.troy.markup.beans.AnnotationCircleBean;
 import org.troy.markup.beans.AnnotationRectangleBean;
@@ -85,6 +86,7 @@ public class AnnotationMouseAdapter extends MouseAdapter {
                 double width = e.getX() - pressedPosX;
                 double height = e.getY() - pressedPosY;
                 if (width > 10 && height > 10) {
+                    
                     Annotation newAnnotation = new Annotation(pressedPosX,
                             pressedPosY,
                             width,
@@ -125,7 +127,7 @@ public class AnnotationMouseAdapter extends MouseAdapter {
             Graphics2D g2d = (Graphics2D) e.getComponent().getGraphics();
             e.consume();
             //If annotation circle is double clicked show editing dialog
-            ArrayList<Annotation> aList = model.getAnnotationList();
+            List<Annotation> aList = model.getAnnotationList();
             for (final Annotation a : aList) {
                 if (g2d.hit(Utilities.getMouseBox(e),
                         Utilities.createCircle(a.getAnnotationCircle()),
