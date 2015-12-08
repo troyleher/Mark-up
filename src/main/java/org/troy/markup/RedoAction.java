@@ -6,10 +6,10 @@
 package org.troy.markup;
 
 import java.awt.event.ActionEvent;
-import java.util.ArrayList;
+import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Icon;
-import org.troy.markup.memento.AnnotationMementoMediator;
+import org.troy.markup.memento.UndoRedoMangerImpl;
 
 /**
  *
@@ -30,7 +30,7 @@ public class RedoAction extends AbstractAction{
     @Override
     public void actionPerformed(ActionEvent e) {
         if(model != null){
-            ArrayList<Annotation> aList = AnnotationMementoMediator.getInstance().redo();
+            List<Annotation> aList = UndoRedoMangerImpl.getInstance().redo();
             if(aList != null){
                 model.setAnnotationList(aList);
             }

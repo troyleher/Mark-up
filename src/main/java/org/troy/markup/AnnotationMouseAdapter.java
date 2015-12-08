@@ -8,12 +8,11 @@ package org.troy.markup;
 import java.awt.Graphics2D;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JDialog;
 import org.troy.markup.beans.AnnotationCircleBean;
 import org.troy.markup.beans.AnnotationRectangleBean;
-import org.troy.markup.memento.AnnotationMementoMediator;
+import org.troy.markup.memento.UndoRedoMangerImpl;
 import org.troy.markup.view.DrawDraggingRectangle;
 
 /**
@@ -93,7 +92,7 @@ public class AnnotationMouseAdapter extends MouseAdapter {
                             height);
                     model.addAnnotationToList(newAnnotation);
                     sa.setAnnotation(newAnnotation);
-                    AnnotationMementoMediator.getInstance().save(model.getAnnotationList());
+                    UndoRedoMangerImpl.getInstance().save(model.getAnnotationList());
                 }
 
             }

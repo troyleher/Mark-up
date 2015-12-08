@@ -6,12 +6,11 @@
 package org.troy.markup;
 
 import java.awt.event.ActionEvent;
-import java.util.ArrayList;
 import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Icon;
-import javax.swing.JTable;
-import org.troy.markup.memento.AnnotationMementoMediator;
+import org.troy.markup.memento.UndoRedoManager;
+import org.troy.markup.memento.UndoRedoMangerImpl;
 
 /**
  *
@@ -33,11 +32,11 @@ public class DeleteAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        AnnotationMementoMediator amm = AnnotationMementoMediator.getInstance();
+        UndoRedoManager undoRedoManager = UndoRedoMangerImpl.getInstance();
         //System.out.println(rowToDelete);
         List<Annotation> aList = model.getAnnotationList();
-        amm.save(aList);
         aList.remove(rowToDelete);
+        undoRedoManager.save(aList);
         //aList = Utilities.reLetter(aList);
         model.setAnnotationList(aList);
         model.addAnnotationToList(null); //hack to refresh table :( TODO 
