@@ -57,11 +57,19 @@ public class Utilities {
         List<Annotation> modifiedList = new ArrayList<>(annotList.size());
         AnnotationLetterFactory.setCurrentLetter(AnnotationLetterFactory.RESET);
         for (Annotation a : annotList) {
-            Annotation newA  = new Annotation(a);
+            Annotation newA = new Annotation(a);
             newA.getAnnotationCircle().setSymbol(AnnotationLetterFactory.createLetter());
             modifiedList.add(newA);
         }
         return modifiedList;
+    }
+
+    public static List<Annotation> copy(List<Annotation> listToCopy) {
+        List<Annotation> newList = new ArrayList<>(listToCopy.size());
+        for (Annotation a : listToCopy) {
+            newList.add(new Annotation(a));
+        }
+        return newList;
     }
 
 }

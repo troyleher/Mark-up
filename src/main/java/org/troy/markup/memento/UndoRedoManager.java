@@ -12,7 +12,7 @@ import org.troy.markup.Annotation;
  *
  * @author Troy
  */
-public interface AnnotationMementoV2 {
+public interface UndoRedoManager {
     
     public void save(List<Annotation> list);
     public List<Annotation> undo();
