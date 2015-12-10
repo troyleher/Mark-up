@@ -9,7 +9,7 @@ import java.awt.event.ActionEvent;
 import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Icon;
-import org.troy.markup.memento.UndoRedoMangerImpl;
+import org.troy.markup.memento.UndoRedoManagerImpl;
 
 /**
  *
@@ -30,7 +30,7 @@ public class RedoAction extends AbstractAction{
     @Override
     public void actionPerformed(ActionEvent e) {
         if(model != null){
-            List<Annotation> aList = UndoRedoMangerImpl.getInstance().redo();
+            List<Annotation> aList = UndoRedoManagerImpl.getInstance().redo();
             if(aList != null){
                 model.setAnnotationList(aList);
             }

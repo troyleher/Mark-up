@@ -9,6 +9,7 @@ import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.List;
 import javax.swing.JDialog;
 import javax.swing.JPopupMenu;
 import javax.swing.JTable;
@@ -33,8 +34,9 @@ public class AnnotationTableMouseAdaptor extends MouseAdapter {
         if (e.getClickCount() == 2 && SwingUtilities.isLeftMouseButton(e)) {
             e.consume();
             int index = table.getSelectedRow();
-            Annotation a = mainPanel.getModel().getAnnotationList().get(index);
-            JDialog d = Utilities.createEditingDialog((Graphics2D)mainPanel.getGraphics(), a, mainPanel);
+            List<Annotation> aList = mainPanel.getModel().getAnnotationList();
+            Annotation a = aList.get(index);
+            JDialog d = Utilities.createEditingDialog((Graphics2D)mainPanel.getGraphics(), a, mainPanel, aList);
             d.setVisible(true);
         }
         displayContextMenu(e);

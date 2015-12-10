@@ -12,7 +12,7 @@ import java.util.List;
 import javax.swing.JDialog;
 import org.troy.markup.beans.AnnotationCircleBean;
 import org.troy.markup.beans.AnnotationRectangleBean;
-import org.troy.markup.memento.UndoRedoMangerImpl;
+import org.troy.markup.memento.UndoRedoManagerImpl;
 import org.troy.markup.view.DrawDraggingRectangle;
 
 /**
@@ -92,7 +92,7 @@ public class AnnotationMouseAdapter extends MouseAdapter {
                             height);
                     model.addAnnotationToList(newAnnotation);
                     sa.setAnnotation(newAnnotation);
-                    UndoRedoMangerImpl.getInstance().save(model.getAnnotationList());
+                    UndoRedoManagerImpl.getInstance().save(model.getAnnotationList());
                 }
 
             }
@@ -131,7 +131,7 @@ public class AnnotationMouseAdapter extends MouseAdapter {
                 if (g2d.hit(Utilities.getMouseBox(e),
                         Utilities.createCircle(a.getAnnotationCircle()),
                         false)) {
-                    JDialog d = Utilities.createEditingDialog(g2d, a, e.getComponent());
+                    JDialog d = Utilities.createEditingDialog(g2d, a, e.getComponent(), aList);
                     d.setVisible(true);
                 }
             }

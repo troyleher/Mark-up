@@ -42,8 +42,8 @@ public class Utilities {
         return new Rectangle2D.Double(bean.getX(), bean.getY(), bean.getWidth(), bean.getHeight());
     }
 
-    public static JDialog createEditingDialog(Graphics2D g2d, Annotation a, Component c) {
-        AnnotationEditingPanel editingPanel = new AnnotationEditingPanel(a);
+    public static JDialog createEditingDialog(Graphics2D g2d, Annotation a, Component c, List<Annotation> aList) {
+        AnnotationEditingPanel editingPanel = new AnnotationEditingPanel(a, aList);
         JDialog dialog = new JDialog(SwingUtilities.getWindowAncestor(c));
         dialog.add(editingPanel);
         dialog.setLocation((int) (a.getAnnotationRectangle().getX() + a.getAnnotationRectangle().getWidth()),

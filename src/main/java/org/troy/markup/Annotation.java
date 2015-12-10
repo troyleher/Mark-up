@@ -19,9 +19,8 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement
 public class Annotation {
-    
-    //TODO Create common interface for circle and rectangle
 
+    //TODO Create common interface for circle and rectangle
     private AnnotationRectangleBean annotationRectangle;
     private AnnotationCircleBean annotationCircle;
     private String details;
@@ -31,11 +30,11 @@ public class Annotation {
     private PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
     /**
-     * Used only by JAXB, to marshal data to a persistant storage. Do not use 
+     * Used only by JAXB, to marshal data to a persistant storage. Do not use
      * this constructor to create an annotation
      */
     private Annotation() {
-        
+
     }
 
     public Annotation(double x, double y, double width, double height) {
@@ -50,12 +49,13 @@ public class Annotation {
                 AnnotationLetterFactory.createLetter());
         details = configBean.getDetails();
     }
-    public Annotation(Annotation a){
+
+    public Annotation(Annotation a) {
         configBean = SystemConfigBean.createSystemConfigBean();
         this.annotationCircle = new AnnotationCircleBean(a.getAnnotationCircle());
         this.annotationRectangle = new AnnotationRectangleBean(a.annotationRectangle);
         this.details = a.getDetails();
-    
+
     }
 
     public String getDetails() {
@@ -102,22 +102,22 @@ public class Annotation {
 
     @Override
     public boolean equals(Object obj) {
-       boolean equals = false;
-       if(obj instanceof Annotation){
-           Annotation a = (Annotation)obj;
-           if(a.getAnnotationCircle().getSymbol().
-                   equals(this.annotationCircle.getSymbol())){
-               equals = true;
-           }
-       }
-       return equals;
+        boolean equals = false;
+        if (obj instanceof Annotation) {
+            Annotation a = (Annotation) obj;
+            if (a.getAnnotationCircle().getSymbol().
+                    equals(this.annotationCircle.getSymbol())) {
+                if (a.getDetails().equalsIgnoreCase(this.details)) {
+                    equals = true;
+                }
+            }
+        }
+        return equals;
     }
 
     @Override
     public int hashCode() {
         return 31 * this.annotationCircle.getSymbol().hashCode();
     }
-    
-    
 
 }

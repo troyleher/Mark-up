@@ -19,6 +19,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
+import org.troy.markup.memento.UndoRedoManager;
+import org.troy.markup.memento.UndoRedoManagerImpl;
 
 /**
  *
@@ -45,6 +47,7 @@ public class Main {
 
         MainPanel mainPanel;
         try {
+            UndoRedoManager undoRedoManager = UndoRedoManagerImpl.getInstance();
             BufferedImage image = ImageIO.read(getClass().getResourceAsStream("/images/test3.png"));
             mainPanel = new MainPanel();
             MainPanelModel model = mainPanel.getModel();
@@ -67,6 +70,7 @@ public class Main {
             JMenu editMenu = new JMenu("Edit");
             UndoAction undoAction = new UndoAction("Undo", null,
                     "Undo last command", new Integer(KeyEvent.VK_Z) );
+            undoRedoManager.addPropertyChangeListener(undoAction);
             RedoAction redoAction = new RedoAction("Redo", null,
                     "Redo last command", new Integer(KeyEvent.VK_R));
             redoAction.setModel(model);

@@ -16,7 +16,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import org.troy.markup.Annotation;
 import org.troy.markup.memento.UndoRedoManager;
-import org.troy.markup.memento.UndoRedoMangerImpl;
+import org.troy.markup.memento.UndoRedoManagerImpl;
 
 /**
  *
@@ -51,7 +51,7 @@ public class TestAnnotationMementoV2 {
         listToSave.add(a1);
         listToSave.add(a2);
 
-        UndoRedoMangerImpl amV2 = (UndoRedoMangerImpl) UndoRedoMangerImpl.getInstance();
+        UndoRedoManagerImpl amV2 = (UndoRedoManagerImpl) UndoRedoManagerImpl.getInstance();
         amV2.save(listToSave);
 
         List<Annotation> saveList = amV2.getSaveListByIndex(0);
@@ -62,7 +62,7 @@ public class TestAnnotationMementoV2 {
     @Test
     public void testUndo1() {
 
-        UndoRedoMangerImpl amV2 = (UndoRedoMangerImpl) UndoRedoMangerImpl.getInstance();
+        UndoRedoManagerImpl amV2 = (UndoRedoManagerImpl) UndoRedoManagerImpl.getInstance();
         amV2.resetMemento();
 
         List<Annotation> listToSave1 = new ArrayList<>();
@@ -100,7 +100,7 @@ public class TestAnnotationMementoV2 {
     @Test
     public void testUndo2(){
         //Test for 1 element left in save list
-        UndoRedoMangerImpl amV2 = (UndoRedoMangerImpl) UndoRedoMangerImpl.getInstance();
+        UndoRedoManagerImpl amV2 = (UndoRedoManagerImpl) UndoRedoManagerImpl.getInstance();
         amV2.resetMemento();
 
         List<Annotation> listToSave1 = new ArrayList<>();
@@ -116,7 +116,7 @@ public class TestAnnotationMementoV2 {
     }
     @Test
     public void testRedo() {
-        UndoRedoMangerImpl amV2 = (UndoRedoMangerImpl) UndoRedoMangerImpl.getInstance();
+        UndoRedoManagerImpl amV2 = (UndoRedoManagerImpl) UndoRedoManagerImpl.getInstance();
         amV2.resetMemento();
 
         List<Annotation> listToSave1 = new ArrayList<>();

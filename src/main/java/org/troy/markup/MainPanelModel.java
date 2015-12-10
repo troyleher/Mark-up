@@ -102,11 +102,9 @@ public class MainPanelModel implements ListSelectionListener {
     }
 
     public void setAnnotationList(List<Annotation> annotationList) {
+        annotationList = Utilities.reLetter(annotationList);
         List<Annotation> oldList = this.annotationList;
         this.annotationList = annotationList;
-        //System.out.println("MainPanelModel setAnnotationList");
-        // System.out.println(pcs.getPropertyChangeListeners().length + " No of property change listners");
-
         pcs.firePropertyChange(ANNOTATION_LIST_CHANGED, oldList, annotationList);
     }
 

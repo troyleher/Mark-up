@@ -15,11 +15,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+import org.troy.markup.memento.UndoRedoManager;
+import org.troy.markup.memento.UndoRedoManagerImpl;
 import org.troy.utilities.AnnotationUtilities;
 
 /**
@@ -30,9 +33,11 @@ public class AnnotationEditingPanel extends JPanel {
 
     private JTextField textField;
     private Annotation annotation;
+    private final List<Annotation> aList;
 
-    public AnnotationEditingPanel(Annotation annotation) {
+    public AnnotationEditingPanel(Annotation annotation, List<Annotation> aList){
         this.annotation = annotation;
+        this.aList = aList;
         SwingUtilities.invokeLater(new Runnable() {
 
             @Override
@@ -91,6 +96,8 @@ public class AnnotationEditingPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                annotation.setDetails(textField.getText());
+                UndoRedoManager undoManager = UndoRedoManagerImpl.getInstance();
+                undoManager.save(aList);
                SwingUtilities.getWindowAncestor((Component)e.getSource()).dispose();
             }
         });

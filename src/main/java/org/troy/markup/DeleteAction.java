@@ -10,7 +10,7 @@ import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Icon;
 import org.troy.markup.memento.UndoRedoManager;
-import org.troy.markup.memento.UndoRedoMangerImpl;
+import org.troy.markup.memento.UndoRedoManagerImpl;
 
 /**
  *
@@ -32,7 +32,7 @@ public class DeleteAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        UndoRedoManager undoRedoManager = UndoRedoMangerImpl.getInstance();
+        UndoRedoManager undoRedoManager = UndoRedoManagerImpl.getInstance();
         //System.out.println(rowToDelete);
         List<Annotation> aList = model.getAnnotationList();
         aList.remove(rowToDelete);
