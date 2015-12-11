@@ -73,6 +73,7 @@ public class Main {
             undoRedoManager.addPropertyChangeListener(undoAction);
             RedoAction redoAction = new RedoAction("Redo", null,
                     "Redo last command", new Integer(KeyEvent.VK_R));
+            undoRedoManager.addPropertyChangeListener(redoAction);
             redoAction.setModel(model);
             undoAction.setMainPanelModel(model);
             JMenuItem undoItem = new JMenuItem(undoAction);

@@ -14,8 +14,11 @@ import org.troy.markup.Annotation;
  * @author Troy
  */
 public interface UndoRedoManager {
+
     public final static String SAVE_LIST_POPULATED = "saveListPopulated";
     public final static String SAVE_LIST_EMPTY = "saveListEmpty";
+    public final static String REDO_LIST_EMPTY = "redoListEmpty";
+    public final static String REDO_LIST_POPULATED = "redoListPopulated";
 
     public void save(List<Annotation> list);
 

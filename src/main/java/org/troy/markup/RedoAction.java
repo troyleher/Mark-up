@@ -6,16 +6,19 @@
 package org.troy.markup;
 
 import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Icon;
+import org.troy.markup.memento.UndoRedoManager;
 import org.troy.markup.memento.UndoRedoManagerImpl;
 
 /**
  *
  * @author Troy
  */
-public class RedoAction extends AbstractAction{
+public class RedoAction extends AbstractAction implements PropertyChangeListener{
     
     private MainPanelModel model;
    
@@ -25,6 +28,7 @@ public class RedoAction extends AbstractAction{
         putValue(SHORT_DESCRIPTION, toolTip);
         putValue(MNEMONIC_KEY, mnemonic);
         this.model = model;
+        setEnabled(false);
         
     }
     @Override
@@ -44,6 +48,16 @@ public class RedoAction extends AbstractAction{
 
     public void setModel(MainPanelModel model) {
         this.model = model;
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        if(evt.getPropertyName().equalsIgnoreCase(UndoRedoManager.REDO_LIST_EMPTY)){
+            setEnabled(false);
+        }
+        if(evt.getPropertyName().equalsIgnoreCase(UndoRedoManager.REDO_LIST_POPULATED)){
+            setEnabled(true);
+        }
     }
     
 }

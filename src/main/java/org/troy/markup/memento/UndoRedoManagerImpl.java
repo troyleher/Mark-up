@@ -40,6 +40,7 @@ public class UndoRedoManagerImpl implements UndoRedoManager {
             saveList.add(Utilities.copy(list));
             pcs.firePropertyChange(SAVE_LIST_POPULATED, null, null);
             redoList.clear();
+            pcs.firePropertyChange(REDO_LIST_EMPTY, null, null);
         }
     }
 
@@ -49,6 +50,7 @@ public class UndoRedoManagerImpl implements UndoRedoManager {
 
         if (!saveList.isEmpty()) {
             redoList.add(saveList.remove(saveList.size() - 1));
+            pcs.firePropertyChange(REDO_LIST_POPULATED, null, null);
             if (saveList.size() > 0) {
                 currentList = Utilities.copy(saveList.get(saveList.size() - 1));
             }else{
@@ -65,6 +67,11 @@ public class UndoRedoManagerImpl implements UndoRedoManager {
             l = redoList.remove(redoList.size() - 1);
             saveList.add(l);
             pcs.firePropertyChange(SAVE_LIST_POPULATED, null, null);
+            
+            //if it the last redo in list
+            if(redoList.isEmpty()){
+                pcs.firePropertyChange(REDO_LIST_EMPTY, null, null);
+            }
         }
         return l;
     }
