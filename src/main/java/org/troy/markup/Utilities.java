@@ -48,7 +48,7 @@ public class Utilities {
         dialog.add(editingPanel);
         dialog.setLocation((int) (a.getAnnotationRectangle().getX() + a.getAnnotationRectangle().getWidth()),
                 (int) (a.getAnnotationRectangle().getY() + a.getAnnotationRectangle().getHeight()));
-        dialog.setSize(500, 150);
+        dialog.setSize(500, 200);
         dialog.setModal(true);
         return dialog;
     }

@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import javax.swing.AbstractAction;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -35,7 +37,7 @@ public class AnnotationEditingPanel extends JPanel {
     private Annotation annotation;
     private final List<Annotation> aList;
 
-    public AnnotationEditingPanel(Annotation annotation, List<Annotation> aList){
+    public AnnotationEditingPanel(Annotation annotation, List<Annotation> aList) {
         this.annotation = annotation;
         this.aList = aList;
         SwingUtilities.invokeLater(new Runnable() {
@@ -49,18 +51,16 @@ public class AnnotationEditingPanel extends JPanel {
 
     @Override
     public Dimension getPreferredSize() {
-        return new Dimension(400, 150);
+        return new Dimension(600, 300);
     }
-    
 
     private void initGUI() {
         this.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
-        
+
         Font font = AnnotationUtilities.retriveFont();
         JPanel symbolPanel = new JPanel();
         symbolPanel.setLayout(new GridLayout(0, 4));
-   
 
         Iterator<String> symbolList = getSymbols().iterator();
         while (symbolList.hasNext()) {
@@ -88,20 +88,28 @@ public class AnnotationEditingPanel extends JPanel {
         c.anchor = GridBagConstraints.LINE_START;
         add(textPanel, c);
         textField.requestFocusInWindow();
-        
-        JPanel buttonPanel = new JPanel();
-        JButton saveButton = new JButton("Save");
-        saveButton.addActionListener(new ActionListener() {
 
-            @Override
-            public void actionPerformed(ActionEvent e) {
-               annotation.setDetails(textField.getText());
-                UndoRedoManager undoManager = UndoRedoManagerImpl.getInstance();
-                undoManager.save(aList);
-               SwingUtilities.getWindowAncestor((Component)e.getSource()).dispose();
-            }
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
+        JButton saveButton = new JButton("Save");
+        saveButton.addActionListener(e -> {
+            annotation.setDetails(textField.getText());
+            UndoRedoManager undoManager = UndoRedoManagerImpl.getInstance();
+            undoManager.save(aList);
+            SwingUtilities.getWindowAncestor((Component) e.getSource()).dispose();
         });
         buttonPanel.add(saveButton);
+
+        JButton cancelButton = new JButton("Cancel");
+        cancelButton.addActionListener(e -> {
+            SwingUtilities.getWindowAncestor((Component) e.getSource()).dispose();
+        });
+        //buttonPanel.add(Box.createRigidArea(new Dimension(0, 2)));
+        buttonPanel.add(cancelButton);
+        
+        JButton reLetterButton = new JButton("Change Label");
+        buttonPanel.add(Box.createRigidArea(new  Dimension(1, 15)));
+        buttonPanel.add(reLetterButton);
         c.fill = GridBagConstraints.VERTICAL;
         c.gridx = 1;
         c.gridy = 1;
